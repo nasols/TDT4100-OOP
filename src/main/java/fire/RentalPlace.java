@@ -7,7 +7,10 @@ import java.util.List;
 
 public class RentalPlace {
     // brukeren som leier ut stedet 
-    User owner; 
+    User owner;
+
+    // tittel på stedet/ annonsen 
+    String name;
 
     // tenker availableDates alltid legger til par av datoer, startdato ledig --> sluttdato ledig, så når noen vil booke sjekkes bare om datoen de vil bo er innenfor intervall startdato ledig --> sluttdato ledig
     // availableDates vil då alltid ha 2*n element
@@ -15,7 +18,7 @@ public class RentalPlace {
     List<LocalDate> availableDates = new ArrayList<>();
 
     // liste over ratings plassen har fått
-    private List<Rating> placeRatings = new ArrayList<>();
+    public List<Rating> placeRatings = new ArrayList<>();
 
     // liste over fasaliteter til boligen, av type badebasseng, wifi, o.l 
     List<String> facilities = new ArrayList<>();
@@ -40,7 +43,7 @@ public class RentalPlace {
     }
 
     // konstruktør 
-    public RentalPlace(User owner, String description, CharSequence availableStart, CharSequence availableEnd, String ... args){
+    public RentalPlace(User owner, String name, String description, CharSequence availableStart, CharSequence availableEnd, String ... args){
 
         LocalDate availableStartDate = LocalDate.parse(availableStart);
         LocalDate availableEndDate = LocalDate.parse(availableEnd);
@@ -52,6 +55,7 @@ public class RentalPlace {
 
         //skaper assosiasjonen mellom eier og plassen
         this.owner = owner;
+        this.name = name;
         owner.addRentalPlace(this);
 
         this.description = description;
@@ -77,10 +81,10 @@ public class RentalPlace {
 
     public static void main(String[] args) throws ParseException {
         User Jonas = new User("jonas", "olsen", "2000-02-21", "nasbrigtzifsoæmaofs.com");
-        RentalPlace hinna = new RentalPlace(Jonas, "fin og flott plass", "2023-02-02", "2023-02-10", "badebasseng", "tog like ved :)");
+        RentalPlace hinna = new RentalPlace(Jonas, "hinnna kåken", "fin og flott plass", "2023-02-02", "2023-02-10", "badebasseng", "tog like ved :)");
         Jonas.addRentalPlace(hinna);
         
-        System.out.println(Jonas.rentalPlaces.get(0));
+        System.out.println(Jonas.rentalPlaces.get(0).name);
 
         
     }

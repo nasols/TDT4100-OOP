@@ -8,6 +8,7 @@ import java.util.List;
 
 public class User {
     // brukerinfo
+    String username;
     String firstName;
     String lastName; 
     LocalDate birthdate;
@@ -81,17 +82,39 @@ public class User {
         this.mail = mail; 
 
     }
+    // mindre konstruktør
+    public User(String username){
+        this.username = username; 
+
+
+    }
 
     public List<RentalPlace> getAllRentalPlaces(){
         return rentalPlaces;
  
+    }
+    public RentalPlace gRentalPlace(RentalPlace place){
+
+        return rentalPlaces.get(rentalPlaces.indexOf(place));
+
     }
 
     public void addRentalPlace(RentalPlace rentalPlace){
         rentalPlaces.add(rentalPlace);
         
     }
+    public void newRentalPlace(String name, String description, CharSequence availableStart, CharSequence availableEnd, String ... args){
+        RentalPlace newPlace = new RentalPlace(this, name, description, availableStart, availableEnd, args);
+        addRentalPlace(newPlace);
 
+    }
+    public Rating getRating(Rating rating){
+
+        return personRatings.get(personRatings.indexOf(rating));
+
+    }
+
+   
     public static void main(String[] args) throws ParseException {
         User Jonas = new User("jonas", "olsen", "2000-02-21", "nasbrigtols@gmail.com");
         System.out.println(Jonas.age);
