@@ -15,8 +15,8 @@ public class FireNBNApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        primaryStage.setTitle("Example App");
-        primaryStage.setScene(new Scene(FXMLLoader.load(getClass().getResource("FireNBN.fxml"))));
+        primaryStage.setTitle("FireNbN");
+        primaryStage.setScene(new Scene(FXMLLoader.load(getClass().getResource("FireLogin.fxml"))));
         primaryStage.show();
     }
 
