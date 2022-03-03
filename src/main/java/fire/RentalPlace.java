@@ -48,16 +48,10 @@ public class RentalPlace {
         LocalDate availableStartDate = LocalDate.parse(availableStart);
         LocalDate availableEndDate = LocalDate.parse(availableEnd);
 
-        if (this.owner == owner){
-            return;
-
-        }
-
+    
         //skaper assosiasjonen mellom eier og plassen
         this.owner = owner;
         this.name = name;
-        owner.addRentalPlace(this);
-
         this.description = description;
         
         for (String e: args){

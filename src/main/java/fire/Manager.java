@@ -1,6 +1,5 @@
 package fire;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +33,20 @@ public class Manager {
         }
         else{
             this.currentUser = newUser; 
+        }
+
+    }
+
+    public void newRentalPlace(String name, String description, CharSequence availableStart, CharSequence availableEnd, String ... args){
+        
+        currentUser.newRentalPlace(name, description, availableStart, availableEnd, args);
+        RentalPlace newRentalPlace = currentUser.rentalPlaces.get(currentUser.rentalPlaces.size() - 1);
+
+
+        if(rentalPlaces.indexOf(newRentalPlace) == -1){
+            rentalPlaces.add(newRentalPlace);
+
+
         }
 
     }
