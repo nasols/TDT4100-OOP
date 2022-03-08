@@ -47,12 +47,15 @@ public class RentalPlace {
 
         LocalDate availableStartDate = LocalDate.parse(availableStart);
         LocalDate availableEndDate = LocalDate.parse(availableEnd);
-
+        if (this.owner == owner){
+            return;
+        }
     
         //skaper assosiasjonen mellom eier og plassen
         this.owner = owner;
         this.name = name;
         this.description = description;
+        owner.addRentalPlace(this);
         
         for (String e: args){
             facilities.add(e);
@@ -71,6 +74,20 @@ public class RentalPlace {
 
  
     }
+    public void addRating(Rating rating){
+        placeRatings.add(rating);
+
+    }
+    public Rating getRating(Rating rating){
+        if(placeRatings.indexOf(rating) != -1 ){
+            return placeRatings.get(placeRatings.indexOf(rating));
+        }
+        else{
+            return null;
+        }
+    }
+
+
 
 
     public static void main(String[] args) throws ParseException {

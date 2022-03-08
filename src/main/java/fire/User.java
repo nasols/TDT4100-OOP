@@ -16,7 +16,7 @@ public class User {
     String mail; 
     
     // Brukerens ratings
-    private List<Rating> personRatings = new ArrayList<>();
+    List<Rating> personRatings = new ArrayList<>();
 
     // brukerens utleiesteder 
     List<RentalPlace> rentalPlaces = new ArrayList<>();
@@ -93,7 +93,7 @@ public class User {
         return rentalPlaces;
  
     }
-    public RentalPlace gRentalPlace(RentalPlace place){
+    public RentalPlace getRentalPlace(RentalPlace place){
 
         return rentalPlaces.get(rentalPlaces.indexOf(place));
 
@@ -109,9 +109,32 @@ public class User {
 
     }
     public Rating getRating(Rating rating){
+        if(personRatings.indexOf(rating) != -1 ){
+            return personRatings.get(personRatings.indexOf(rating));
+        }
+        else{
+            return null;
+        }
 
-        return personRatings.get(personRatings.indexOf(rating));
+    }
+    public void addRating(Rating rating){
+        this.personRatings.add(rating);
 
+    }
+    public void newRating(int score, String comment, Object UserOrPlace){
+        if (UserOrPlace instanceof User){
+            Rating newRating = new Rating(score, comment, this, UserOrPlace);
+            ((User) UserOrPlace).addRating(newRating);
+
+        }
+        else if (UserOrPlace instanceof RentalPlace){
+            
+            Rating newRating = new Rating(score, comment, this, UserOrPlace);
+            ((RentalPlace) UserOrPlace).placeRatings.add(newRating);
+
+        }
+
+    
     }
 
    

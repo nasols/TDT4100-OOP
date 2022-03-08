@@ -1,5 +1,6 @@
 package fire;
 
+import java.text.ParseException;
 import java.util.Date;
 
 public class Rating {
@@ -13,41 +14,59 @@ public class Rating {
     
 
     // Konstruktøren passer på gyldig parametre. Kommentar for ratingen er valgfritt
-    public Rating(int score, String comment, User rater, User ratedUser) {
-        if ((!validScore(score) || rater == null) && (rater == ratedUser)) {
+    // UserOrPlace kan ver av hvilken som helst type, men blir bare brukt om den er av type user eller eller rentalplace 
+    public Rating(int score, String comment, User rater, Object UserOrPlace) {
+        if ((!validScore(score) || rater == null) && (rater == ((User) UserOrPlace))) {
             throw new IllegalArgumentException("Feil ved oppretting av rating");
         }
 
-        this.score = score;
-        this.comment = comment;
-        this.rater = rater;
-        
-        if(ratedUser.personRatings.indexOf(this) != -1){
+        if (UserOrPlace instanceof User){
+            Rating checkRating = ((User) UserOrPlace).getRating(this);
 
-            ratedUser.personRatings.add(this);
+            if(checkRating == null){
+
+                this.score = score;
+                this.comment = comment;
+                this.rater = rater;
+
+                ((User) UserOrPlace).addRating(this);
+
+            }
+            else{
+                throw new IllegalArgumentException("allerede eksisterende rating"); 
+
+            }
 
         }
+
+        else if(UserOrPlace instanceof RentalPlace){
+            Rating checkRating = ((RentalPlace) UserOrPlace).getRating(this);
+
+            if(checkRating == null){
+                this.score = score;
+                this.comment = comment;
+                this.rater = rater;
+
+                ((RentalPlace) UserOrPlace).addRating(this);
+
+            }
+            else{
+                throw new IllegalArgumentException("allerede eksisterende rating");
+            }
+
+
+        }
+
+        
 
     }
 
-    //konstruktør om man vil skrive rating om et sted. 
-    public Rating(int score, String comment, User rater, RentalPlace ratedPlace) {
-        if ((!validScore(score) || rater == null) && (rater == ratedPlace.owner)) {
-            throw new IllegalArgumentException("Feil ved oppretting av rating");
-        }
-
-        this.score = score;
-        this.comment = comment;
-        this.rater = rater;
-
-        if(ratedPlace.placeRatings.indexOf(this) != -1){
-
-            ratedPlace.placeRatings.add(this);
-
-        }
-        
+    public String getComment(){
+        return comment;
         
     }
+
+
 
     //Score er ratingverdien som går fra 0 til og med 10
     private boolean validScore(int score) {
@@ -55,6 +74,21 @@ public class Rating {
             return true;
         }
         return false;
+    }
+
+    public static void main(String[] args) throws ParseException {
+
+        User Jonas = new User("jonas", "olsen", "2000-02-21", "nasbrigtols@gmail.com");
+        User Henrik = new User("henrik", "log", "2000-03-18", "henrilja@gmail.com");
+
+        RentalPlace hinna = new RentalPlace(Jonas, "hinnna kåken", "fin og flott plass", "2023-02-02", "2023-02-10", "badebasseng", "tog like ved :)");
+
+        Rating rating = new Rating(5, "nice", Jonas, Henrik);
+        Rating rating1 = new Rating(5, "rått", Henrik, hinna);
+
+        System.out.println(Henrik.getRating(rating).rater.firstName);
+        System.out.println(Jonas.getRentalPlace(hinna).getRating(rating1).comment);
+        
     }
 }
 
