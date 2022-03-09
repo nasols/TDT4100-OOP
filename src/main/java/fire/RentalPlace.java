@@ -55,7 +55,7 @@ public class RentalPlace {
         this.owner = owner;
         this.name = name;
         this.description = description;
-        owner.addRentalPlace(this);
+        owner.addRentalPlace(name, this);
         
         for (String e: args){
             facilities.add(e);
@@ -93,9 +93,9 @@ public class RentalPlace {
     public static void main(String[] args) throws ParseException {
         User Jonas = new User("jonas", "olsen", "2000-02-21", "nasbrigtzifsoæmaofs.com");
         RentalPlace hinna = new RentalPlace(Jonas, "hinnna kåken", "fin og flott plass", "2023-02-02", "2023-02-10", "badebasseng", "tog like ved :)");
-        Jonas.addRentalPlace(hinna);
+        Jonas.addRentalPlace("hinna kåken", hinna);
         
-        System.out.println(Jonas.rentalPlaces.get(0).name);
+        //System.out.println(Jonas.rentalPlaces.get(0).name);
 
         
     }

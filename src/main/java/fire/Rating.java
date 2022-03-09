@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class Rating {
     // Variabler
+
     private int score;
     private String comment;
     private Date ratingDate;
@@ -63,7 +64,7 @@ public class Rating {
 
     public String getComment(){
         return comment;
-        
+
     }
 
 
@@ -86,8 +87,8 @@ public class Rating {
         Rating rating = new Rating(5, "nice", Jonas, Henrik);
         Rating rating1 = new Rating(5, "rått", Henrik, hinna);
 
-        System.out.println(Henrik.getRating(rating).rater.firstName);
-        System.out.println(Jonas.getRentalPlace(hinna).getRating(rating1).comment);
+        System.out.println(Henrik.getRating(rating).rater.getFirstName());
+        System.out.println(Jonas.getRentalPlace("hinna kåken").getRating(rating1).comment);
         
     }
 }
