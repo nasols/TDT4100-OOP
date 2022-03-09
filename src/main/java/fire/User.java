@@ -3,27 +3,28 @@ package fire;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 
 public class User {
     // brukerinfo
-    String username;
-    String firstName;
-    String lastName; 
+    private String username;
+    private String firstName;
+    private String lastName; 
     LocalDate birthdate;
-    int age;
+    private int age;
     String mail; 
     
     // Brukerens ratings
     List<Rating> personRatings = new ArrayList<>();
 
     // brukerens utleiesteder 
-    List<RentalPlace> rentalPlaces = new ArrayList<>();
+    LinkedHashMap<String, RentalPlace> rentalPlaces = new LinkedHashMap<>();
 
     // steder og datoer brukeren skal leie andre steder (egen ferie)
-    List<RentalPlace> rentedPlaces = new ArrayList<>();
-    List<LocalDate> rentedDates = new ArrayList<>();
+    LinkedHashMap<String, RentalPlace> rentedPlaces = new LinkedHashMap<>();
+    LinkedHashMap<String, List<LocalDate>> rentedDates = new LinkedHashMap<>();
 
     // validations 
 
@@ -88,26 +89,56 @@ public class User {
 
 
     }
+    // getters & setters 
+
+    public String getUsername(){
+        return this.username;
+
+    }
+    public String getFirstName(){
+        return this.firstName;
+
+    }
+    public String getLastName(){
+        return this.lastName;
+        
+    }
+    public int getAge(){
+        return this.age;
+
+    }
+
+
 
     public List<RentalPlace> getAllRentalPlaces(){
-        return rentalPlaces;
+        return null;
  
     }
-    public RentalPlace getRentalPlace(RentalPlace place){
+    public RentalPlace getRentalPlace(String name){
 
-        return rentalPlaces.get(rentalPlaces.indexOf(place));
+        return rentalPlaces.get(name);
 
     }
 
-    public void addRentalPlace(RentalPlace rentalPlace){
-        rentalPlaces.add(rentalPlace);
+    public void addRentalPlace(String name, RentalPlace rentalPlace){
+        rentalPlaces.put(name, rentalPlace);
         
     }
     public void newRentalPlace(String name, String description, CharSequence availableStart, CharSequence availableEnd, String ... args){
-        RentalPlace newPlace = new RentalPlace(this, name, description, availableStart, availableEnd, args);
-        addRentalPlace(newPlace);
+        if(rentalPlaces.containsKey(name) == false){
+            RentalPlace newPlace = new RentalPlace(this, name, description, availableStart, availableEnd, args);
+            addRentalPlace(name, newPlace);
 
+        }
+       
+        else{
+            throw new IllegalArgumentException("allerede eksisterende boplass"); 
+            
+        }
     }
+        
+
+
     public Rating getRating(Rating rating){
         if(personRatings.indexOf(rating) != -1 ){
             return personRatings.get(personRatings.indexOf(rating));
@@ -117,6 +148,11 @@ public class User {
         }
 
     }
+    public Rating getRatingByIndex(int index){
+        return personRatings.get(index);
+
+    }
+
     public void addRating(Rating rating){
         this.personRatings.add(rating);
 
@@ -136,6 +172,20 @@ public class User {
 
     
     }
+
+    public void addRentedPlace(String nameOfRentalPlace, RentalPlace rentalPlace){
+        rentedPlaces.put(nameOfRentalPlace, rentalPlace);
+
+
+    }
+    public void addRentedDates(String nameOfRentalPlace, LocalDate startDate, LocalDate endDate){
+        List<LocalDate> startEndDates = new ArrayList<>();
+        startEndDates.add(startDate);
+        startEndDates.add(endDate);
+        rentedDates.put(nameOfRentalPlace, startEndDates);
+
+    }
+
 
    
     public static void main(String[] args) throws ParseException {
