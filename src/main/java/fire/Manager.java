@@ -64,10 +64,11 @@ public class Manager {
 
         List<LocalDate> availableDates = wishedRented.availableDates;
 
-        for(int i = 0; i<availableDates.size();  i ++){
+        int counter = 0;
+
+        for(int i = 0; i<availableDates.size();  i+=2){
             LocalDate availableStart = availableDates.get(i);
             LocalDate availableEnd = availableDates.get(i+1);
-
 
             
 
@@ -75,38 +76,44 @@ public class Manager {
                 currentUser.addRentedPlace(nameOfPlace, wishedRented);
                 currentUser.addRentedDates(nameOfPlace, rentalDateStart, rentalDateEnd);
                 
+                
 
                 // sjekker om datoene som du vil leie fra - til er innenfor et intervall av ledige datoer, isåfall gjør det riktige
                 if(availableStart.isEqual(rentalDateStart) && availableEnd.isEqual(rentalDateEnd)){
                     wishedRented.availableDates.remove(rentalDateEnd);
                     wishedRented.availableDates.remove(rentalDateStart);
+                    counter ++;
 
                 }
                 else if (availableStart.isEqual(rentalDateStart) && !(availableEnd.isEqual(rentalDateEnd))){
                     wishedRented.availableDates.add(availableDates.indexOf(availableStart), rentalDateEnd);
                     wishedRented.availableDates.remove(rentalDateStart);
+                    counter ++;
                     
                 }
                 else if (!(availableStart.isEqual(rentalDateStart)) && availableEnd.isEqual(rentalDateEnd)){
                     wishedRented.availableDates.add(availableDates.indexOf(availableEnd), rentalDateStart);
                     wishedRented.availableDates.remove(rentalDateEnd);
+                    counter ++;
                     
                 }
                 else if(!(availableStart.isEqual(rentalDateStart) && availableEnd.isEqual(rentalDateEnd))){
                     wishedRented.availableDates.add(availableDates.indexOf(availableEnd), rentalDateStart);
                     wishedRented.availableDates.add(availableDates.indexOf(availableEnd), rentalDateEnd);
+                    counter ++; 
 
                 }
 
-                break;
-
-            }
-            else{
-                throw new IllegalArgumentException("input datoer er ukke innenfor et tidsintervall med ledige datoer"); 
+            
 
             }
 
         }
+        if (counter == 0){
+            throw new IllegalArgumentException("neineinei");
+
+        }
+
 
 
     }
@@ -154,12 +161,27 @@ public class Manager {
         manager.newRentalPlace("hinna", "description", "2022-04-01", "2022-04-25", "ingenting");
         System.out.println(manager.rentalPlaces.get("hinna"));
         manager.login("Jonas");
-        manager.rentPlace("2022-04-01", 5, "hinna");
-        System.out.println(manager.rentalPlaces.get("hinna").availableDates.size());
+        manager.rentPlace("2022-04-06", 5, "hinna");
+        
 
-        manager.login("Jonas");
-        manager.newRentalPlace("hinna", "description", "2022-05-01", "2022-05-25", "nada");
-     
+        manager.login("Tobias");
+        manager.rentPlace("2022-04-15", 8, "hinna");
+        System.out.println(manager.rentalPlaces.get("hinna").availableDates.size());
+        for (int i = 0; i<manager.rentalPlaces.get("hinna").availableDates.size(); i ++){
+            System.out.println(manager.rentalPlaces.get("hinna").availableDates.get(i));
+
+
+        }
+
+        manager.login("Martin");
+        manager.rentPlace("2022-04-12", 2, "hinna");
+        System.out.println(manager.rentalPlaces.get("hinna").availableDates.size());
+        for (int i = 0; i<manager.rentalPlaces.get("hinna").availableDates.size(); i ++){
+            System.out.println(manager.rentalPlaces.get("hinna").availableDates.get(i));
+
+
+        }
+
 
     }
 
