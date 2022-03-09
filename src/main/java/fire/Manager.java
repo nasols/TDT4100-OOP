@@ -5,16 +5,16 @@ import java.util.List;
 
 public class Manager {
     
-    User currentUser; 
-    String currentUsername; 
+    static User currentUser; 
+    static String currentUsername; 
 
-    List<User> users = new ArrayList<>();
-    List<String> userNames = new ArrayList<>();
+    static List<User> users = new ArrayList<>();
+    static List<String> userNames = new ArrayList<>();
 
-    List<RentalPlace> rentalPlaces = new ArrayList<>();
+    static List<RentalPlace> rentalPlaces = new ArrayList<>();
 
     // sjekker om user allerede ligger i listen over brukere
-    public boolean validateUsername(User user){
+    private static boolean validateUsername(User user){
         if(users.indexOf(user) != -1){
             return false;
 
@@ -26,25 +26,25 @@ public class Manager {
 
     }
 
-    public void login(String username){
+    public static void login(String username){
         User newUser = new User(username);
 
         if(validateUsername(newUser) == true){
             users.add(newUser);
             userNames.add(username);
-            this.currentUser = newUser;
-            this.currentUsername = username;
+            currentUser = newUser;
+            currentUsername = username;
 
         }
         else{
-            this.currentUser = newUser; 
-            this.currentUsername = username;
+            currentUser = newUser; 
+            currentUsername = username;
 
         }
 
     }
 
-    public void newRentalPlace(String name, String description, CharSequence availableStart, CharSequence availableEnd, String ... args){
+    public static void newRentalPlace(String name, String description, CharSequence availableStart, CharSequence availableEnd, String ... args){
 
         currentUser.newRentalPlace(name, description, availableStart, availableEnd, args);
         RentalPlace newRentalPlace = currentUser.rentalPlaces.get(currentUser.rentalPlaces.size() - 1);
@@ -58,12 +58,12 @@ public class Manager {
 
     }
 
-    public void newRating(int score, String comment, Object UserOrPlace){
+    public static void newRating(int score, String comment, Object UserOrPlace){
         currentUser.newRating(score, comment, UserOrPlace);
 
     }
 
-    public User getUser(String username){
+    public static User getUser(String username){
         int index = userNames.indexOf(username);
 
         if(index != -1){
@@ -77,7 +77,7 @@ public class Manager {
     
         
     }
-    public User getCurrentUser(){
+    public static User getCurrentUser(){
         int index = userNames.indexOf(currentUsername);
 
         return users.get(index);
