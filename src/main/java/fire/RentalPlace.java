@@ -87,7 +87,10 @@ public class RentalPlace {
         }
     }
 
-
+    public String toString() {
+        //return owner + name + description;
+        return "kuk";
+    }
 
 
     public static void main(String[] args) throws ParseException {

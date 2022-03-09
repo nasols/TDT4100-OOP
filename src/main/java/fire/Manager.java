@@ -11,11 +11,11 @@ public class Manager {
     static User currentUser; 
     static String currentUsername; 
 
-    LinkedHashMap<String, RentalPlace> rentalPlaces = new LinkedHashMap<>();
-    LinkedHashMap<String, User> users = new LinkedHashMap<>();
+    static LinkedHashMap<String, RentalPlace> rentalPlaces = new LinkedHashMap<>();
+    static LinkedHashMap<String, User> users = new LinkedHashMap<>();
 
     // sjekker om user allerede ligger i listen over brukere
-    public boolean validateUsername(String username){
+    private static boolean validateUsername(String username){
         if(users.containsKey(username) == true){
             return true;
 
@@ -32,17 +32,24 @@ public class Manager {
 
         if(validateUsername(username) == false){
             users.put(username, newUser);
-            this.currentUser = newUser;
-            this.currentUsername = username;
+            currentUser = newUser;
+            currentUsername = username;
 
         }
         else{
-            this.currentUser = users.get(username); 
-            this.currentUsername = username;
+            currentUser = users.get(username); 
+            currentUsername = username;
 
         }
 
     }
+/* 
+    public List rentalDescriptionList() {
+        for (i in rentalplaces) {
+            List.append(rentalPlaces[i].toString());
+        }
+        return List
+    } */
 
     public static void newRentalPlace(String name, String description, CharSequence availableStart, CharSequence availableEnd, String ... args){
 
