@@ -101,6 +101,10 @@ public class Manager {
                 break;
 
             }
+            else{
+                throw new IllegalArgumentException("input datoer er ukke innenfor et tidsintervall med ledige datoer"); 
+
+            }
 
         }
 
@@ -157,9 +161,6 @@ public class Manager {
         manager.newRentalPlace("hinna", "description", "2022-05-01", "2022-05-25", "nada");
      
 
-
-        
-    
     }
 
 
