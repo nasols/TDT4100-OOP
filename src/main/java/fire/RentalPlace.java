@@ -3,7 +3,10 @@ package fire;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+
 
 public class RentalPlace {
     // brukeren som leier ut stedet 
@@ -27,18 +30,73 @@ public class RentalPlace {
     String description; 
 
 
-    // validations 
-    // validerer bookingdatoene er etter dagens dato
-    private boolean validateAvailableDate(LocalDate availableDate){
+    public boolean validateRentalDate(LocalDate ... checkdates){
 
-        LocalDate today = LocalDate.now();
-        if (today.isBefore(availableDate)){
-            return true;
+        /**
+         sjekker om input datoer er innenfor et intervall i listen over availableDates for utleiestedet. 
+         hvis de er return true 
+         hvis ikke return false
+         */
+        List<LocalDate> checkDatesList = new ArrayList<>(Arrays.asList(checkdates));
+
+        LocalDate dato1 = checkDatesList.get(0);
+        LocalDate dato2 = checkDatesList.get(1);
+
+
+        if (validateAvailableDate(checkdates)){
+            for(LocalDate e : availableDates){
+                if(!e.isBefore(dato1) && !e.isEqual(dato1)){
+
+                    if(dato2.isBefore(e) || dato2.isEqual(e)){
+
+                        return true;
+                    }
+
+                    else{
+                        throw new IllegalArgumentException("datoer ikke innenfor tilgjengelig intervall");
+
+                    }
+                }
+            }
         }
+        return false;
+    }
+
+
+    
+    private boolean validateAvailableDate(LocalDate ... checkdates){
+        /** 
+         Input 1 eller 2 datoer, 
+         Hvis 1 dato; sjekker om datoen er etter dags dato, dette brukes feks når du lage ny utleie plass og legger inn en "Ledig fra" dato
+         Hvis 2 datoer; sjekker om dato1 er etter dags dato, og om dato 2 er etter dato 1 
+
+        */
+        LocalDate today = LocalDate.now();
+
+        List<LocalDate> checkhDatesList = new ArrayList<>(Arrays.asList(checkdates));
+
+
+        if(checkhDatesList.size() == 1){
+            LocalDate dato1 = checkhDatesList.get(0);
+            return today.isBefore(dato1);
+        }
+
         else{
+            LocalDate dato1 = checkhDatesList.get(0);
+            LocalDate dato2 = checkhDatesList.get(1);
+
+            
+
+            if ((today.isBefore(dato1) || today.isEqual(dato1)) && (dato1.isBefore(dato2))){
+                return true;
+
+            }
             return false;
 
         }
+        
+        
+    
         
     }
 
@@ -62,7 +120,7 @@ public class RentalPlace {
 
         }
 
-        if (validateAvailableDate(availableStartDate) && validateAvailableDate(availableEndDate) && availableStartDate.isBefore(availableEndDate)){
+        if (validateAvailableDate(availableStartDate, availableEndDate)){
             this.availableDates.add(availableStartDate);
             this.availableDates.add(availableEndDate);
 
@@ -89,17 +147,26 @@ public class RentalPlace {
 
     public String toString() {
         //return owner + name + description;
-        return this.name + "\n" + description + "\n" + this.owner.getUsername();
+        String fas = ""; 
+        for (String e : facilities){
+            fas = fas + e + ", ";
+        }
+        return this.name + "\n" + description + "\n" + fas + "\n" + this.owner.getUsername();
     }
 
 
     public static void main(String[] args) throws ParseException {
-        User Jonas = new User("jonas", "olsen", "2000-02-21", "nasbrigtzifsoæmaofs.com");
-        RentalPlace hinna = new RentalPlace(Jonas, "hinnna kåken", "fin og flott plass", "2023-02-02", "2023-02-10", "badebasseng", "tog like ved :)");
+        User Jonas = new User("Jonas");
+        RentalPlace hinna = new RentalPlace(Jonas, "hinnna kåken", "fin og flott plass", "2023-02-03", "2023-02-20", "badebasseng", "tog like ved :)", "fugletitting");
         Jonas.addRentalPlace("hinna kåken", hinna);
         
-        //System.out.println(Jonas.rentalPlaces.get(0).name);
+        LocalDate dato1 = LocalDate.parse("2023-02-05");
+        LocalDate dato2 = LocalDate.parse("2023-02-18");
 
+        System.out.println(hinna.validateRentalDate(dato1, dato2));
+        System.out.println(hinna.toString());
+
+        
         
     }
     

@@ -1,6 +1,7 @@
 package fire;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -66,67 +67,45 @@ public class Manager {
 
 
     }
-    // leier plass, input er dato og hvor mange dager du vil leie, samt navnet på stedet du vil leie
-    public static void rentPlace(CharSequence date, int numberOfDays, String nameOfPlace){
+    // leier plass, fra dato til dato, samt navnet på stedet du vil leie
+    public void rentPlace(CharSequence date1, CharSequence date2, String nameOfPlace){
 
-        LocalDate rentalDateStart = LocalDate.parse(date);
-        LocalDate rentalDateEnd = rentalDateStart.plusDays(numberOfDays);
+        /**
+         tar inn 2 datoer, fra og til dato, og hvilken bolig du vil leie 
+         sjekker om datoene er innenfor et intervall tilhørende bolig 
+         oppdaterer så listen over ledige datoer til boligen
+         */
+
+        LocalDate rentalDateStart = LocalDate.parse(date1);
+        LocalDate rentalDateEnd = LocalDate.parse(date2);
 
         RentalPlace wishedRented = rentalPlaces.get(nameOfPlace);
 
         List<LocalDate> availableDates = wishedRented.availableDates;
 
-        int counter = 0;
+        if(wishedRented.validateRentalDate(rentalDateStart, rentalDateEnd)){
 
-        for(int i = 0; i<availableDates.size();  i+=2){
-            LocalDate availableStart = availableDates.get(i);
-            LocalDate availableEnd = availableDates.get(i+1);
-
-            
-
-            if((availableStart.isBefore(rentalDateStart) || availableStart.isEqual(rentalDateStart)) && (availableEnd.isAfter(rentalDateEnd) || availableEnd.isEqual(rentalDateEnd))){
-                currentUser.addRentedPlace(nameOfPlace, wishedRented);
-                currentUser.addRentedDates(nameOfPlace, rentalDateStart, rentalDateEnd);
-                
-                
-
-                // sjekker om datoene som du vil leie fra - til er innenfor et intervall av ledige datoer, isåfall gjør det riktige
-                if(availableStart.isEqual(rentalDateStart) && availableEnd.isEqual(rentalDateEnd)){
-                    wishedRented.availableDates.remove(rentalDateEnd);
-                    wishedRented.availableDates.remove(rentalDateStart);
-                    counter ++;
-
-                }
-                else if (availableStart.isEqual(rentalDateStart) && !(availableEnd.isEqual(rentalDateEnd))){
-                    wishedRented.availableDates.add(availableDates.indexOf(availableStart), rentalDateEnd);
-                    wishedRented.availableDates.remove(rentalDateStart);
-                    counter ++;
-                    
-                }
-                else if (!(availableStart.isEqual(rentalDateStart)) && availableEnd.isEqual(rentalDateEnd)){
-                    wishedRented.availableDates.add(availableDates.indexOf(availableEnd), rentalDateStart);
-                    wishedRented.availableDates.remove(rentalDateEnd);
-                    counter ++;
-                    
-                }
-                else if(!(availableStart.isEqual(rentalDateStart) && availableEnd.isEqual(rentalDateEnd))){
-                    wishedRented.availableDates.add(availableDates.indexOf(availableEnd), rentalDateStart);
-                    wishedRented.availableDates.add(availableDates.indexOf(availableEnd), rentalDateEnd);
-                    counter ++; 
-
-                }
-
-            
-
+            if(availableDates.contains(rentalDateStart) && availableDates.contains(rentalDateEnd)){
+                availableDates.remove(rentalDateStart);
+                availableDates.remove(rentalDateEnd);
             }
+            
+            else if(availableDates.contains(rentalDateStart)){
+                availableDates.remove(rentalDateStart);
+                availableDates.add(rentalDateEnd);
+            }
+            else if(availableDates.contains(rentalDateEnd)){
+                availableDates.add(rentalDateStart);
+                availableDates.remove(rentalDateEnd);
+            }
+            else{
+                availableDates.add(rentalDateStart);
+                availableDates.add(rentalDateEnd);
+            }
+            
+            Collections.sort(availableDates, new LocalDateComparator());
 
         }
-        if (counter == 0){
-            throw new IllegalArgumentException("neineinei");
-
-        }
-
-
 
     }
 
@@ -157,29 +136,17 @@ public class Manager {
 
     // mana
     public static void main(String[] args) {
-        Manager.login("Jonas");
+        Manager manager = new Manager();
 
-        System.out.println(Manager.currentUsername);
-        Manager.newRentalPlace("name", "description", "2022-05-01", "2022-05-28", "masse kult");
-
-        Manager.login("Henrik");
-        Manager.rentPlace("2022-05-05", 10, "name");
-
-        System.out.println(Manager.currentUsername);
-        System.out.println(Manager.currentUser.rentedDates);
-
-        Manager.login("Jonas");
-        Manager.rentPlace("2022-05-16", 4, "name");
-
-        System.out.println(Manager.currentUser.rentedDates);
-
-        System.out.println(Manager.users);
-
-
-
+        manager.login("Jonas");
+        manager.newRentalPlace("hinna", "description", "2023-02-04", "2023-02-21", "args");
+        System.out.println(manager.currentUser.rentalPlaces.get("hinna").availableDates);    
         
+        manager.login("Henrik");
+        manager.rentPlace("2023-02-05", "2023-02-21", "hinna");
 
-    
+        manager.login("Jonas");
+        System.out.println(manager.currentUser.rentalPlaces.get("hinna").availableDates);    
 
 
     }
