@@ -6,14 +6,21 @@ import java.util.List;
 
 public class Manager {
     
-    static User currentUser; 
-    static String currentUsername; 
+    private User currentUser; 
+    private String currentUsername; 
 
-    static LinkedHashMap<String, RentalPlace> rentalPlaces = new LinkedHashMap<>();
-    static LinkedHashMap<String, User> users = new LinkedHashMap<>();
+    private LinkedHashMap<String, RentalPlace> rentalPlaces = new LinkedHashMap<>();
+    private LinkedHashMap<String, User> users = new LinkedHashMap<>();
 
+
+
+
+    public String getCurrentUsername() {
+        return currentUsername;
+    }
+    
     // sjekker om user allerede ligger i listen over brukere
-    private static boolean validateUsername(String username){
+    private boolean validateUsername(String username){
         if(users.containsKey(username) == true){
             return true;
 
@@ -25,7 +32,7 @@ public class Manager {
         
     }
 
-    public static void login(String username){
+    public void login(String username){
         User newUser = new User(username);
 
         if(validateUsername(username) == false){
@@ -49,7 +56,7 @@ public class Manager {
         return List
     } */
 
-    public static void newRentalPlace(String name, String description, CharSequence availableStart, CharSequence availableEnd, String ... args){
+    public void newRentalPlace(String name, String description, CharSequence availableStart, CharSequence availableEnd, String ... args){
 
         currentUser.newRentalPlace(name, description, availableStart, availableEnd, args);
         RentalPlace newPlace = currentUser.getRentalPlace(name);
@@ -123,7 +130,7 @@ public class Manager {
 
     }
 
-    public static void newRating(int score, String comment, Object UserOrPlace){
+    public void newRating(int score, String comment, Object UserOrPlace){
         currentUser.newRating(score, comment, UserOrPlace);
 
     }

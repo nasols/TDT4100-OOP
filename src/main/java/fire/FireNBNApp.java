@@ -18,7 +18,7 @@ public class FireNBNApp extends Application {
     public void start(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("FireLogin.fxml"));
         Scene scene = new Scene(root);
-        stage.setTitle("FireNbN");
+        stage.setTitle("FireNBN");
         stage.setScene(scene);
         stage.show();
     }

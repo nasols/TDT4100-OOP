@@ -5,18 +5,16 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fire.FireNbNController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fire.FireNBNController">
    <top>
       <HBox alignment="TOP_CENTER" prefHeight="24.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
@@ -37,6 +35,9 @@
                </HBox.margin>
             </ImageView>
          </children>
+         <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
       </HBox>
    </top>
    <bottom>
@@ -59,24 +60,34 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <ScrollPane prefWidth="500.0">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
-                     <children>
-                        <ListView fx:id="rentalPlaceList" fixedCellSize="10.0" prefHeight="180.0" prefWidth="200.0" />
-                     </children>
-                  </AnchorPane>
-              </content>
+            <ListView fx:id="rentalPlaceList" prefHeight="200.0" prefWidth="200.0">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
-            </ScrollPane>
-            <Button mnemonicParsing="false" text="Lei" />
+               </VBox.margin></ListView>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <DatePicker promptText="Startdato">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </DatePicker>
+                  <TextField promptText="Antall dager">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <Button mnemonicParsing="false" text="Lei Sted">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
          </children>
       </VBox>
    </center>
    <left>
-      <VBox alignment="TOP_CENTER" prefHeight="323.0" prefWidth="199.0" BorderPane.alignment="CENTER">
+      <VBox alignment="TOP_CENTER" prefHeight="313.0" prefWidth="186.0" BorderPane.alignment="CENTER">
          <children>
             <Label alignment="TOP_CENTER" text="Lei ut sted">
                <font>
@@ -88,7 +99,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
             </TextField>
-            <TextArea fx:id="description" prefHeight="200.0" prefWidth="200.0" promptText="Forklaring">
+            <TextArea fx:id="description" prefHeight="199.0" prefWidth="164.0" promptText="Forklaring">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
