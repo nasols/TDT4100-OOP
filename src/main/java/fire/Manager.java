@@ -67,7 +67,7 @@ public class Manager {
 
     }
     // leier plass, input er dato og hvor mange dager du vil leie, samt navnet på stedet du vil leie
-    public static void rentPlace(CharSequence date, int numberOfDays, String nameOfPlace){
+    public void rentPlace(CharSequence date, int numberOfDays, String nameOfPlace){
 
         LocalDate rentalDateStart = LocalDate.parse(date);
         LocalDate rentalDateEnd = rentalDateStart.plusDays(numberOfDays);
@@ -157,23 +157,24 @@ public class Manager {
 
     // mana
     public static void main(String[] args) {
-        Manager.login("Jonas");
+        Manager manager = new Manager();
+        manager.login("Jonas");
 
-        System.out.println(Manager.currentUsername);
-        Manager.newRentalPlace("name", "description", "2022-05-01", "2022-05-28", "masse kult");
+        System.out.println(manager.currentUsername);
+        manager.newRentalPlace("name", "description", "2022-05-01", "2022-05-28", "masse kult");
 
-        Manager.login("Henrik");
-        Manager.rentPlace("2022-05-05", 10, "name");
+        manager.login("Henrik");
+        manager.rentPlace("2022-05-05", 10, "name");
 
-        System.out.println(Manager.currentUsername);
-        System.out.println(Manager.currentUser.rentedDates);
+        System.out.println(manager.currentUsername);
+        System.out.println(manager.currentUser.rentedDates);
 
-        Manager.login("Jonas");
-        Manager.rentPlace("2022-05-16", 4, "name");
+        manager.login("Jonas");
+        manager.rentPlace("2022-05-16", 4, "name");
 
-        System.out.println(Manager.currentUser.rentedDates);
+        System.out.println(manager.currentUser.rentedDates);
 
-        System.out.println(Manager.users);
+        System.out.println(manager.users);
 
 
 
