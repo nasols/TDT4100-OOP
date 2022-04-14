@@ -54,12 +54,7 @@ public class Rating {
             else{
                 throw new IllegalArgumentException("allerede eksisterende rating");
             }
-
-
         }
-
-        
-
     }
 
     public String getComment(){

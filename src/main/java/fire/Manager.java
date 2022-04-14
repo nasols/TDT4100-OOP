@@ -1,8 +1,6 @@
 package fire;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -62,7 +60,7 @@ public class Manager {
 
     }
     // leier plass, input er dato og hvor mange dager du vil leie, samt navnet på stedet du vil leie
-    public void rentPlace(CharSequence date, int numberOfDays, String nameOfPlace){
+    public static void rentPlace(CharSequence date, int numberOfDays, String nameOfPlace){
 
         LocalDate rentalDateStart = LocalDate.parse(date);
         LocalDate rentalDateEnd = rentalDateStart.plusDays(numberOfDays);
@@ -149,45 +147,32 @@ public class Manager {
     }
 
 
+
+    // mana
     public static void main(String[] args) {
-        Manager manager = new Manager();
+        Manager.login("Jonas");
 
-        manager.login("Jonas");
-        System.out.println(manager.getCurrentUser().getUsername());
-        manager.login("Henrik");
-        System.out.println(manager.getCurrentUser().getUsername());
+        System.out.println(Manager.currentUsername);
+        Manager.newRentalPlace("name", "description", "2022-05-01", "2022-05-28", "masse kult");
 
-        System.out.println(manager.getUser("Jonas").getUsername());
+        Manager.login("Henrik");
+        Manager.rentPlace("2022-05-05", 10, "name");
 
-        manager.getCurrentUser().newRating(5, "sesam", manager.getUser("Jonas"));
-        manager.login("Jonas");
-        System.out.println(manager.getCurrentUser().getRatingByIndex(0).getComment());
-        manager.login("Henrik");
-        System.out.println(manager.getUser("Jonas").getRatingByIndex(0).getComment());
+        System.out.println(Manager.currentUsername);
+        System.out.println(Manager.currentUser.rentedDates);
 
-        manager.newRentalPlace("hinna", "description", "2022-04-01", "2022-04-25", "ingenting");
-        System.out.println(manager.rentalPlaces.get("hinna"));
-        manager.login("Jonas");
-        manager.rentPlace("2022-04-06", 5, "hinna");
+        Manager.login("Jonas");
+        Manager.rentPlace("2022-05-16", 4, "name");
+
+        System.out.println(Manager.currentUser.rentedDates);
+
+        System.out.println(Manager.users);
+
+
+
         
 
-        manager.login("Tobias");
-        manager.rentPlace("2022-04-15", 8, "hinna");
-        System.out.println(manager.rentalPlaces.get("hinna").availableDates.size());
-        for (int i = 0; i<manager.rentalPlaces.get("hinna").availableDates.size(); i ++){
-            System.out.println(manager.rentalPlaces.get("hinna").availableDates.get(i));
-
-
-        }
-
-        manager.login("Martin");
-        manager.rentPlace("2022-04-12", 2, "hinna");
-        System.out.println(manager.rentalPlaces.get("hinna").availableDates.size());
-        for (int i = 0; i<manager.rentalPlaces.get("hinna").availableDates.size(); i ++){
-            System.out.println(manager.rentalPlaces.get("hinna").availableDates.get(i));
-
-
-        }
+    
 
 
     }

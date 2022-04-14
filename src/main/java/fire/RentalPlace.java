@@ -43,7 +43,7 @@ public class RentalPlace {
     }
 
     // konstruktør 
-    public RentalPlace(User owner, String name, String description, CharSequence availableStart, CharSequence availableEnd, String ... args){
+    public RentalPlace(User owner, String name, String description, CharSequence availableStart, CharSequence availableEnd, String ... fasiliteter){
 
         LocalDate availableStartDate = LocalDate.parse(availableStart);
         LocalDate availableEndDate = LocalDate.parse(availableEnd);
@@ -57,7 +57,7 @@ public class RentalPlace {
         this.description = description;
         owner.addRentalPlace(name, this);
         
-        for (String e: args){
+        for (String e: fasiliteter){
             facilities.add(e);
 
         }
@@ -89,7 +89,7 @@ public class RentalPlace {
 
     public String toString() {
         //return owner + name + description;
-        return "kuk";
+        return this.name + "\n" + description + "\n" + this.owner.getUsername();
     }
 
 

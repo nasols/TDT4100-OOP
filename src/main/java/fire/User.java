@@ -83,10 +83,10 @@ public class User {
         this.mail = mail; 
 
     }
+    
     // mindre konstruktør
     public User(String username){
         this.username = username; 
-
 
     }
     // getters & setters 
