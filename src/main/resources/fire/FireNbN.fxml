@@ -41,10 +41,10 @@
       </HBox>
    </top>
    <bottom>
-      <HBox alignment="CENTER" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <HBox fx:id="logoutBox" alignment="CENTER" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="info" text="Logget inn som &lt;username&gt;" />
-            <Button mnemonicParsing="false" onAction="#handleLogout" text="Logout">
+            <Label fx:id="infoLabel" text="Logget inn som &lt;username&gt;" />
+            <Button mnemonicParsing="false" onAction="#handleLogout" text="Logg ut">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>
@@ -53,7 +53,7 @@
       </HBox>
    </bottom>
    <center>
-      <VBox alignment="TOP_CENTER" prefHeight="288.0" prefWidth="505.0" BorderPane.alignment="CENTER_RIGHT">
+      <VBox fx:id="mainBox" alignment="TOP_CENTER" prefHeight="288.0" BorderPane.alignment="CENTER_RIGHT">
          <children>
             <Label text="Tilgjengelige leiligheter">
                <font>
@@ -63,7 +63,8 @@
             <ListView fx:id="rentalPlaceList" prefHeight="200.0" prefWidth="200.0">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin></ListView>
+               </VBox.margin>
+            </ListView>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
                   <DatePicker promptText="Startdato">
@@ -87,7 +88,7 @@
       </VBox>
    </center>
    <left>
-      <VBox alignment="TOP_CENTER" prefHeight="313.0" prefWidth="186.0" BorderPane.alignment="CENTER">
+      <VBox fx:id="newRentalBox" alignment="TOP_CENTER" prefHeight="313.0" prefWidth="186.0" BorderPane.alignment="CENTER">
          <children>
             <Label alignment="TOP_CENTER" text="Lei ut sted">
                <font>
@@ -109,4 +110,12 @@
          </children>
       </VBox>
    </left>
+   <right>
+      <HBox fx:id="loginBox" alignment="CENTER_LEFT" prefHeight="100.0" BorderPane.alignment="CENTER_LEFT">
+         <children>
+            <TextField fx:id="username" />
+            <Button mnemonicParsing="false" onAction="#handleLogin" text="Logg inn" />
+         </children>
+      </HBox>
+   </right>
 </BorderPane>

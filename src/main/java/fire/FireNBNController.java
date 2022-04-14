@@ -2,6 +2,7 @@ package fire;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javafx.event.ActionEvent;
@@ -10,111 +11,127 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.Node;
 
 
 public class FireNBNController {
 
-    private Stage stage;
-    private Scene scene;
     private Manager manager;
+    private List<String> rentalList = new ArrayList<>(); //temp
 
-    //Login scene
     @FXML
-    private TextField username;
-
-
-    //Main scene
-    @FXML
-    private TextField title;
+    private TextField username, title, daysRenting;
     @FXML
     private TextArea description;
     @FXML
     private Label infoLabel;
     @FXML
-    private ListView<String> rentalPlaceList = new ListView<>();
-
-    private List<String> rentalList = new ArrayList<>(); //temp
+    private ListView<String> rentalPlaceList;
+    @FXML
+    private VBox mainBox, newRentalBox;
+    @FXML
+    private HBox loginBox;
+    @FXML
+    private Button logoutButton;
+    @FXML
+    private DatePicker avaliableDateStart, avaliableDateEnd, rentStart;
 
 
     @FXML
     public void initialize() {
         this.manager = new Manager();
-        updateRentalPlaceList(); //manager.getRentalList
-        //updateInfoLabel();
+        initVisible();
     }
 
     @FXML
-    private void handleLogin(ActionEvent e) throws IOException {
+    private void handleLogin() {
         manager.login(username.getText());
         updateRentalPlaceList();
-
-        Parent root = FXMLLoader.load(getClass().getResource("FireNbN.fxml"));
-        stage = (Stage)((Node)e.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-        updateRentalPlaceList();
-
+        updateInfoLabel("Logget inn som " + manager.getCurrentUsername());
+        toggleVisible();
     }
 
 
     @FXML
-    private void handleLogout(ActionEvent e) throws IOException {
-        updateRentalPlaceList2();
-        Parent root = FXMLLoader.load(getClass().getResource("FireLogin.fxml"));
-        stage = (Stage)((Node)e.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+    private void handleLogout() {
+        updateInfoLabel("Velkommen!");
+        toggleVisible();
     }
 
 
     @FXML
     private void handleAddPlace() {
-        //  TODO: Metode i Manager som validerer input for å leie sted
-        if (true) {
-            //  TODO: Manager.newRentalPlace skal legge til currentUser automatisk
-            manager.newRentalPlace(title.getText(), description.getText(), "2022-09-09", "2022-10-10");
+        if(title.getText() == "") {
+            showErrorMessage("Feil verdier ved oppretting av nytt sted");
         }
+        else {
+            //manager.newRentalPlace(title.getText(), description.getText(), avaliableDateStart.getValue().toString(), avaliableDateEnd.getValue().toString());
+            rentalList.add(title.getText());
+        }
+        
+        
+        //  TODO: Metode i Manager som validerer input for å leie sted
+        //if (true) {
+            //  TODO: Manager.newRentalPlace skal legge til currentUser automatisk
+        //    manager.newRentalPlace(title.getText(), description.getText(), "2022-09-09", "2022-10-10");
+        //}
         //else {
         //    info.setText("Feil ved oppretting av utleiested");
         //}
     }
 
-    private void updateInfoLabel() {
-        infoLabel.setText("Logget inn som " + manager.getCurrentUsername());
+    @FXML
+    private void handleRentPlace() {
+        String selectedPlace = rentalPlaceList.getSelectionModel().getSelectedItem();
+        //manager.rentPlace(rentStart.getValue().toString(), Integer.parseInt(daysRenting.getText()), selectedPlace);
+        updateRentalPlaceList();
+        
+    }
+
+    private void initVisible() {
+        mainBox.managedProperty().bind(mainBox.visibleProperty());
+        newRentalBox.managedProperty().bind(newRentalBox.visibleProperty());
+        loginBox.managedProperty().bind(loginBox.visibleProperty());
+        logoutButton.managedProperty().bind(logoutButton.visibleProperty());
+        mainBox.setVisible(false);
+        newRentalBox.setVisible(false);
+        logoutButton.setVisible(false);
+    }
+
+
+    private void toggleVisible() {
+        mainBox.setVisible(!mainBox.isVisible());
+        newRentalBox.setVisible(!newRentalBox.isVisible());
+        loginBox.setVisible(!loginBox.isVisible());
+        logoutButton.setVisible(!logoutButton.isVisible());
+    }
+
+
+
+    private void updateInfoLabel(String info) {
+        infoLabel.setText(info);
+    }
+
+    private void showErrorMessage(String errorMessage) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("En feil har oppstått");
+        alert.setContentText(errorMessage);
+        alert.showAndWait();
     }
 
 
     private void updateRentalPlaceList() {
-        rentalList.add("Test1 fwfwe \n 1");
-        rentalList.add("Test2");
-        rentalList.add("Test3");
-        rentalList.add("Test4");
-        rentalList.add("Test5");
-        rentalList.add("Test6");
-        rentalList.add("Test7");
-        rentalList.add("Test8");
-        rentalList.add("Test9");
-        rentalList.add("Test10");
-        rentalPlaceList.getItems().setAll(rentalList);
-    }
-    private void updateRentalPlaceList2() {
-        rentalList.add("Test1 fwfwe \n 11111111111111111111111111111111111111");
-        rentalList.add("Test2");
-        rentalList.add("Test3");
-        rentalList.add("Test4");
-        rentalList.add("Test5");
-        rentalList.add("Test6");
-        rentalList.add("Test7");
-        rentalList.add("Test8");
-        rentalList.add("Test9");
-        rentalList.add("Test10");
-        rentalPlaceList.getItems().setAll(rentalList);
+        rentalPlaceList.getItems().setAll(rentalList); //manager.getRentalList
     }
 }
