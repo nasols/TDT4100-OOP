@@ -44,11 +44,10 @@ public class RentalPlace {
 
 
         if (validateAvailableDate(checkdates)){
-            for(LocalDate e : availableDates){
-                if(!e.isBefore(dato1) && !e.isEqual(dato1)){
 
-                    if(dato2.isBefore(e) || dato2.isEqual(e)){
-
+            for(int i = 1; i < availableDates.size(); i+= 2){
+                if(dato1.isBefore(availableDates.get(i))){
+                    if(dato2.isBefore(availableDates.get(i))){
                         return true;
                     }
 
@@ -157,7 +156,7 @@ public class RentalPlace {
 
     public static void main(String[] args) throws ParseException {
         User Jonas = new User("Jonas");
-        RentalPlace hinna = new RentalPlace(Jonas, "hinnna kåken", "fin og flott plass", "2023-02-03", "2023-02-20", "badebasseng", "tog like ved :)", "fugletitting");
+        RentalPlace hinna = new RentalPlace(Jonas, "hinnna kåken", "fin og flott plass", "2023-02-03", "2023-02-20", "badebasseng", "tog like ved :)", "fugletitting", "internett");
         Jonas.addRentalPlace("hinna kåken", hinna);
         
         LocalDate dato1 = LocalDate.parse("2023-02-05");

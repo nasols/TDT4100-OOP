@@ -1,8 +1,8 @@
 package fire;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Manager {
@@ -10,8 +10,9 @@ public class Manager {
     private User currentUser; 
     private String currentUsername; 
 
-    private LinkedHashMap<String, RentalPlace> rentalPlaces = new LinkedHashMap<>();
-    private LinkedHashMap<String, User> users = new LinkedHashMap<>();
+    private List<RentalPlace> otherRentalPlaces = new ArrayList<>();
+    private List<RentalPlace> currentUserRentalPlaces = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
 
 
 
@@ -22,29 +23,37 @@ public class Manager {
     
     // sjekker om user allerede ligger i listen over brukere
     private boolean validateUsername(String username){
-        if(users.containsKey(username) == true){
-            return true;
+        for(User e : users){
+
+            if(e.getUsername() == username){
+
+                return true;
+    
+            }
 
         }
-        else{
-            return false; 
-
-        }
-        
+        return false;
+  
     }
 
     public void login(String username){
+
         User newUser = new User(username);
 
         if(validateUsername(username) == false){
-            users.put(username, newUser);
+            users.add(newUser);
             currentUser = newUser;
             currentUsername = username;
 
         }
         else{
-            currentUser = users.get(username); 
-            currentUsername = username;
+            for (User e : users){
+                if (e.getUsername() == username){
+                    currentUser = e; 
+                    currentUsername = username;
+                }
+
+            }
 
         }
 
@@ -61,14 +70,16 @@ public class Manager {
 
         currentUser.newRentalPlace(name, description, availableStart, availableEnd, args);
         RentalPlace newPlace = currentUser.getRentalPlace(name);
-        if (rentalPlaces.containsKey(name) == false){
-            rentalPlaces.put(name, newPlace);
-        }
+        if (currentUserRentalPlaces.contains(newPlace) == false){
+            currentUserRentalPlaces.add(newPlace);
+            otherRentalPlaces.add(newPlace);
 
+
+        }
 
     }
     // leier plass, fra dato til dato, samt navnet på stedet du vil leie
-    public void rentPlace(CharSequence date1, CharSequence date2, String nameOfPlace){
+    public void rentPlace(CharSequence date1, CharSequence date2, int indexOfPlace){
 
         /**
          tar inn 2 datoer, fra og til dato, og hvilken bolig du vil leie 
@@ -79,7 +90,7 @@ public class Manager {
         LocalDate rentalDateStart = LocalDate.parse(date1);
         LocalDate rentalDateEnd = LocalDate.parse(date2);
 
-        RentalPlace wishedRented = rentalPlaces.get(nameOfPlace);
+        RentalPlace wishedRented = otherRentalPlaces.get(indexOfPlace);
 
         List<LocalDate> availableDates = wishedRented.availableDates;
 
@@ -104,8 +115,10 @@ public class Manager {
             }
             
             Collections.sort(availableDates, new LocalDateComparator());
+            return;
 
         }
+        throw new IllegalArgumentException("go for it (negativt ladd)");
 
     }
 
@@ -116,19 +129,23 @@ public class Manager {
 
     public User getUser(String username){
 
-        if(users.containsKey(username)){
-            return users.get(username);
+        for (User e : users){
+            if (e.getUsername() == username){
+                return e;
+            }
 
         }
-        else{
-            throw new IllegalArgumentException("ingen bruker ved det brukernavnet");
-
-        }
-    
+        throw new IllegalArgumentException("ingen bruker ved det brukernavnet");
         
     }
+
     public User getCurrentUser(){
-        return users.get(currentUsername);
+        return getUser(currentUsername);
+    }
+
+    public RentalPlace getRentalPlace(int index){
+        
+        return otherRentalPlaces.get(index);
 
     }
 
@@ -140,13 +157,17 @@ public class Manager {
 
         manager.login("Jonas");
         manager.newRentalPlace("hinna", "description", "2023-02-04", "2023-02-21", "args");
-        System.out.println(manager.currentUser.rentalPlaces.get("hinna").availableDates);    
-        
-        manager.login("Henrik");
-        manager.rentPlace("2023-02-05", "2023-02-21", "hinna");
+        System.out.println(manager.currentUser.rentalPlaces.get("hinna").availableDates);
+
+
+        manager.login("hanne");
+        manager.rentPlace("2023-02-08", "2023-02-15", 0);
+        manager.rentPlace("2023-02-10", "2023-02-12", 0);
+
+
 
         manager.login("Jonas");
-        System.out.println(manager.currentUser.rentalPlaces.get("hinna").availableDates);    
+        System.out.println(manager.currentUser.rentalPlaces.get("hinna").availableDates);
 
 
     }
