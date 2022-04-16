@@ -83,7 +83,7 @@ public class Rating {
         Rating rating1 = new Rating(5, "rått", Henrik, hinna);
 
         System.out.println(Henrik.getRating(rating).rater.getFirstName());
-        System.out.println(Jonas.getRentalPlace("hinna kåken").getRating(rating1).comment);
+        //System.out.println(Jonas.getRentalPlace("hinna kåken").getRating(rating1).comment);
         
     }
 }

@@ -39,23 +39,25 @@ public class RentalPlace {
          */
         List<LocalDate> checkDatesList = new ArrayList<>(Arrays.asList(checkdates));
 
-        LocalDate dato1 = checkDatesList.get(0);
-        LocalDate dato2 = checkDatesList.get(1);
+        LocalDate leieFra = checkDatesList.get(0);
+        LocalDate leieTil = checkDatesList.get(1);
 
 
         if (validateAvailableDate(checkdates)){
 
-            for(int i = 1; i < availableDates.size(); i+= 2){
-                if(dato1.isBefore(availableDates.get(i))){
-                    if(dato2.isBefore(availableDates.get(i))){
+            for (int i = 0; i < availableDates.size(); i += 1){
+                // i partall -> fra-dato
+                // i oddetall -> til-dato
+                if ((leieFra.isBefore(availableDates.get(i))) && i%2 != 0){
+                    if(leieTil.isBefore(availableDates.get(i))){
                         return true;
                     }
-
-                    else{
-                        throw new IllegalArgumentException("datoer ikke innenfor tilgjengelig intervall");
-
-                    }
+                    return false;
                 }
+                else if ((leieFra.isBefore(availableDates.get(i))) && i%2 == 0){
+                    return false;
+                }
+
             }
         }
         return false;
@@ -112,7 +114,7 @@ public class RentalPlace {
         this.owner = owner;
         this.name = name;
         this.description = description;
-        owner.addRentalPlace(name, this);
+        
         
         for (String e: fasiliteter){
             facilities.add(e);
@@ -144,20 +146,29 @@ public class RentalPlace {
         }
     }
 
+    public boolean inList(List<RentalPlace> compareList){
+        return compareList.contains(this);
+    }
+
     public String toString() {
         //return owner + name + description;
         String fas = ""; 
+        String date = "";
         for (String e : facilities){
             fas = fas + e + ", ";
         }
-        return this.name + "\n" + description + "\n" + fas + "\n" + this.owner.getUsername();
+
+        for (LocalDate dat : availableDates){
+            date = date + dat + ", ";
+
+        }
+        return this.name + "\n" + description + "\n" + fas + "\n" + date + "\n" + this.owner.getUsername();
     }
 
 
     public static void main(String[] args) throws ParseException {
         User Jonas = new User("Jonas");
         RentalPlace hinna = new RentalPlace(Jonas, "hinnna kåken", "fin og flott plass", "2023-02-03", "2023-02-20", "badebasseng", "tog like ved :)", "fugletitting", "internett");
-        Jonas.addRentalPlace("hinna kåken", hinna);
         
         LocalDate dato1 = LocalDate.parse("2023-02-05");
         LocalDate dato2 = LocalDate.parse("2023-02-18");
