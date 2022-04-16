@@ -1,50 +1,38 @@
 package fire;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.Node;
 
 
 public class FireNBNController {
 
     private Manager manager;
-    private List<String> rentalList = new ArrayList<>(); //temp
 
     @FXML
-    private TextField username, title, daysRenting;
+    private TextField username, title;
     @FXML
     private TextArea description;
     @FXML
     private Label infoLabel;
     @FXML
-    private ListView<String> rentalPlaceList;
+    private ListView<String> rentalPlaceList, bookingList;
     @FXML
-    private VBox mainBox, newRentalBox;
+    private TabPane mainBox;
     @FXML
     private HBox loginBox;
     @FXML
     private Button logoutButton;
     @FXML
-    private DatePicker avaliableDateStart, avaliableDateEnd, rentStart;
+    private DatePicker avaliableDateStart, avaliableDateEnd, rentStart, rentEnd;
 
 
     @FXML
@@ -75,48 +63,33 @@ public class FireNBNController {
             showErrorMessage("Feil verdier ved oppretting av nytt sted");
         }
         else {
-            //manager.newRentalPlace(title.getText(), description.getText(), avaliableDateStart.getValue().toString(), avaliableDateEnd.getValue().toString());
-            rentalList.add(title.getText());
+            manager.newRentalPlace(title.getText(), description.getText(), avaliableDateStart.getValue().toString(), avaliableDateEnd.getValue().toString());
+            //rentalList.add(title.getText());
         }
-        
-        
-        //  TODO: Metode i Manager som validerer input for å leie sted
-        //if (true) {
-            //  TODO: Manager.newRentalPlace skal legge til currentUser automatisk
-        //    manager.newRentalPlace(title.getText(), description.getText(), "2022-09-09", "2022-10-10");
-        //}
-        //else {
-        //    info.setText("Feil ved oppretting av utleiested");
-        //}
     }
 
     @FXML
     private void handleRentPlace() {
-        String selectedPlace = rentalPlaceList.getSelectionModel().getSelectedItem();
-        //manager.rentPlace(rentStart.getValue().toString(), Integer.parseInt(daysRenting.getText()), selectedPlace);
+        int selectedIndex = rentalPlaceList.getSelectionModel().getSelectedIndex();
+        manager.rentPlace(rentStart.getValue().toString(), rentEnd.getValue().toString(), selectedIndex);
         updateRentalPlaceList();
         
     }
 
     private void initVisible() {
         mainBox.managedProperty().bind(mainBox.visibleProperty());
-        newRentalBox.managedProperty().bind(newRentalBox.visibleProperty());
         loginBox.managedProperty().bind(loginBox.visibleProperty());
         logoutButton.managedProperty().bind(logoutButton.visibleProperty());
         mainBox.setVisible(false);
-        newRentalBox.setVisible(false);
         logoutButton.setVisible(false);
     }
 
 
     private void toggleVisible() {
         mainBox.setVisible(!mainBox.isVisible());
-        newRentalBox.setVisible(!newRentalBox.isVisible());
         loginBox.setVisible(!loginBox.isVisible());
         logoutButton.setVisible(!logoutButton.isVisible());
     }
-
-
 
     private void updateInfoLabel(String info) {
         infoLabel.setText(info);
@@ -132,6 +105,8 @@ public class FireNBNController {
 
 
     private void updateRentalPlaceList() {
-        rentalPlaceList.getItems().setAll(rentalList); //manager.getRentalList
+        System.out.println(manager.toStringList());
+        System.out.println(manager.getCurrentUsername());
+        rentalPlaceList.getItems().setAll(manager.toStringList());
     }
 }
