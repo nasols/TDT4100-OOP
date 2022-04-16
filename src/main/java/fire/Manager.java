@@ -171,8 +171,10 @@ public class Manager {
         Manager manager = new Manager();
 
         manager.login("Jonas");
-        manager.newRentalPlace( "    ", "description", "2023-02-04", "2023-02-21", "args");
-        manager.newRentalPlace("olso", "kompis", "2023-02-04", "2023-02-21", "args");
+        manager.newRentalPlace("hinna", "description", "2023-02-04", "2023-02-21", "args");
+        manager.newRentalPlace("olso", "kompis", "2023-02-04", "2023-02-21", "internett", "badebasseng");
+        System.out.println(manager.getCurrentUser().rentalPlaces.get(0).availableDates);
+
 
         manager.login("hanne");
         manager.rentPlace("2023-02-08", "2023-02-15", 0);
@@ -181,18 +183,16 @@ public class Manager {
         manager.login("Jonas");
         manager.newRentalPlace("bygd", "råtass", "2023-02-04", "2023-02-21", "args");
 
-        //System.out.println(manager.currentUser.rentalPlaces.get("hinna").availableDates);
+        manager.login("papsen");
+        manager.rentPlace("2023-02-09", "2023-02-12", 0);
+        manager.newRentalPlace("nmr17", "råtass", "2023-02-04", "2023-02-21", "args");
 
-
+        manager.login("Jonas");
+        System.out.println(manager.getCurrentUser().rentalPlaces.get(0).availableDates);
         
-
-
-
-        manager.login("hanne");
         //System.out.println(manager.currentUser.rentalPlaces.get("hinna").availableDates);
     
-        System.out.println(manager.getRentalPlace(2));
-        System.out.println(manager.toStringList().get(2));
+        //System.out.println(manager.toStringList());
 
 
 
