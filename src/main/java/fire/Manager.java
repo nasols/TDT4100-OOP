@@ -70,7 +70,7 @@ public class Manager {
 
         currentUser.newRentalPlace(name, description, availableStart, availableEnd, args);
         RentalPlace newPlace = currentUser.getRentalPlace(name);
-        if (currentUserRentalPlaces.contains(newPlace) == false){
+        if (currentUserRentalPlaces.indexOf(newPlace) == -1){
             currentUserRentalPlaces.add(newPlace);
             otherRentalPlaces.add(newPlace);
 
@@ -149,6 +149,15 @@ public class Manager {
 
     }
 
+    public List<String> toStringList () {
+        List<String> descriptions = new ArrayList<>();
+        for (RentalPlace place : otherRentalPlaces) {
+            System.out.println(place.toString());
+            descriptions.add(place.toString());
+        }
+        return descriptions;
+    }
+
 
 
     // mana
@@ -157,17 +166,21 @@ public class Manager {
 
         manager.login("Jonas");
         manager.newRentalPlace("hinna", "description", "2023-02-04", "2023-02-21", "args");
-        System.out.println(manager.currentUser.rentalPlaces.get("hinna").availableDates);
+        //System.out.println(manager.currentUser.rentalPlaces.get("hinna").availableDates);
 
 
         manager.login("hanne");
+        manager.newRentalPlace("name", "description", "2023-02-04", "2023-02-24", "args");
         manager.rentPlace("2023-02-08", "2023-02-15", 0);
         manager.rentPlace("2023-02-10", "2023-02-12", 0);
 
 
 
         manager.login("Jonas");
-        System.out.println(manager.currentUser.rentalPlaces.get("hinna").availableDates);
+        //System.out.println(manager.currentUser.rentalPlaces.get("hinna").availableDates);
+        for ( RentalPlace place : manager.otherRentalPlaces) {
+            System.out.println(place.toString());
+        }
 
 
     }
