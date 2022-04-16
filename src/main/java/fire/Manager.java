@@ -10,8 +10,7 @@ public class Manager {
     private User currentUser; 
     private String currentUsername; 
 
-    private List<RentalPlace> otherRentalPlaces = new ArrayList<>();
-    private List<RentalPlace> currentUserRentalPlaces = new ArrayList<>();
+    private List<RentalPlace> rentalPlaces = new ArrayList<>();
     private List<User> users = new ArrayList<>();
 
 
@@ -67,16 +66,15 @@ public class Manager {
     } */
 
     public void newRentalPlace(String name, String description, CharSequence availableStart, CharSequence availableEnd, String ... args){
-
-        currentUser.newRentalPlace(name, description, availableStart, availableEnd, args);
-        RentalPlace newPlace = currentUser.getRentalPlace(name);
-        if (currentUserRentalPlaces.contains(newPlace) == false){
-            currentUserRentalPlaces.add(newPlace);
-            otherRentalPlaces.add(newPlace);
-
-
+        String pattern = "([a-zA-Z])\\1*";
+        if(name == "" || name.matches(pattern)){
+            throw new IllegalArgumentException("kan ikke ha tomt felt i 'name' / bare repeterende karakterer, manager -> newRentalPlace");
         }
+        currentUser.newRentalPlace(name, description, availableStart, availableEnd, args);
+        RentalPlace newPlace = currentUser.getRentalPlace(currentUser.getAllRentalPlaces().size()-1);
+        rentalPlaces.add(newPlace);
 
+        
     }
     // leier plass, fra dato til dato, samt navnet på stedet du vil leie
     public void rentPlace(CharSequence date1, CharSequence date2, int indexOfPlace){
@@ -90,7 +88,7 @@ public class Manager {
         LocalDate rentalDateStart = LocalDate.parse(date1);
         LocalDate rentalDateEnd = LocalDate.parse(date2);
 
-        RentalPlace wishedRented = otherRentalPlaces.get(indexOfPlace);
+        RentalPlace wishedRented = rentalPlaces.get(indexOfPlace);
 
         List<LocalDate> availableDates = wishedRented.availableDates;
 
@@ -118,7 +116,7 @@ public class Manager {
             return;
 
         }
-        throw new IllegalArgumentException("go for it (negativt ladd)");
+        throw new IllegalArgumentException("ugyldig intervall gitt inn, manager -> rentPlace");
 
     }
 
@@ -144,11 +142,28 @@ public class Manager {
     }
 
     public RentalPlace getRentalPlace(int index){
+        List<RentalPlace> displayList = rentalPlaces.stream().filter(e -> !e.inList(currentUser.getAllRentalPlaces())).toList();
         
-        return otherRentalPlaces.get(index);
+        return displayList.get(index);
 
     }
 
+    public List<String> toStringList(){
+
+        List<RentalPlace> displayList = rentalPlaces.stream().filter(e -> !e.inList(currentUser.getAllRentalPlaces())).toList();
+
+        List<String> display = new ArrayList<>();
+
+        for (RentalPlace rentalPlace : displayList) {
+            display.add(rentalPlace.toString());
+
+        };
+        
+        return display; 
+
+
+
+    }
 
 
     // mana
@@ -156,18 +171,29 @@ public class Manager {
         Manager manager = new Manager();
 
         manager.login("Jonas");
-        manager.newRentalPlace("hinna", "description", "2023-02-04", "2023-02-21", "args");
-        System.out.println(manager.currentUser.rentalPlaces.get("hinna").availableDates);
-
+        manager.newRentalPlace( "    ", "description", "2023-02-04", "2023-02-21", "args");
+        manager.newRentalPlace("olso", "kompis", "2023-02-04", "2023-02-21", "args");
 
         manager.login("hanne");
         manager.rentPlace("2023-02-08", "2023-02-15", 0);
-        manager.rentPlace("2023-02-10", "2023-02-12", 0);
-
-
-
+        manager.newRentalPlace("trodden", "description", "2023-05-14", "2023-05-28", "args");
+        
         manager.login("Jonas");
-        System.out.println(manager.currentUser.rentalPlaces.get("hinna").availableDates);
+        manager.newRentalPlace("bygd", "råtass", "2023-02-04", "2023-02-21", "args");
+
+        //System.out.println(manager.currentUser.rentalPlaces.get("hinna").availableDates);
+
+
+        
+
+
+
+        manager.login("hanne");
+        //System.out.println(manager.currentUser.rentalPlaces.get("hinna").availableDates);
+    
+        System.out.println(manager.getRentalPlace(2));
+        System.out.println(manager.toStringList().get(2));
+
 
 
     }

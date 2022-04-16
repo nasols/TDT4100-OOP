@@ -20,7 +20,7 @@ public class User {
     List<Rating> personRatings = new ArrayList<>();
 
     // brukerens utleiesteder 
-    LinkedHashMap<String, RentalPlace> rentalPlaces = new LinkedHashMap<>();
+    List<RentalPlace> rentalPlaces = new ArrayList<>();
 
     // steder og datoer brukeren skal leie andre steder (egen ferie)
     LinkedHashMap<String, RentalPlace> rentedPlaces = new LinkedHashMap<>();
@@ -111,30 +111,32 @@ public class User {
 
 
     public List<RentalPlace> getAllRentalPlaces(){
-        return null;
+        return rentalPlaces;
  
     }
-    public RentalPlace getRentalPlace(String name){
+    public RentalPlace getRentalPlace(int index){
 
-        return rentalPlaces.get(name);
+        return rentalPlaces.get(index);
 
     }
 
-    public void addRentalPlace(String name, RentalPlace rentalPlace){
-        rentalPlaces.put(name, rentalPlace);
+    public void addRentalPlace(RentalPlace rentalPlace){
+        for (RentalPlace place : rentalPlaces) {
+            if(place.name == rentalPlace.name){
+                throw new IllegalArgumentException("allerede eksisterende bolig, user -> addRentalPlace");
+
+            }
+        }
+        rentalPlaces.add(rentalPlace);
         
-    }
-    public void newRentalPlace(String name, String description, CharSequence availableStart, CharSequence availableEnd, String ... args){
-        if(rentalPlaces.containsKey(name) == false){
-            RentalPlace newPlace = new RentalPlace(this, name, description, availableStart, availableEnd, args);
-            addRentalPlace(name, newPlace);
 
-        }
-       
-        else{
-            throw new IllegalArgumentException("allerede eksisterende boplass"); 
-            
-        }
+    }
+
+    public void newRentalPlace(String name, String description, CharSequence availableStart, CharSequence availableEnd, String ... args){
+        
+        RentalPlace newPlace = new RentalPlace(this, name, description, availableStart, availableEnd, args);
+        addRentalPlace(newPlace);
+        
     }
         
 
@@ -178,6 +180,7 @@ public class User {
 
 
     }
+    
     public void addRentedDates(String nameOfRentalPlace, LocalDate startDate, LocalDate endDate){
         List<LocalDate> startEndDates = new ArrayList<>();
         startEndDates.add(startDate);
