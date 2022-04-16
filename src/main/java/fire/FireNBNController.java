@@ -1,50 +1,38 @@
 package fire;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.Node;
 
 
 public class FireNBNController {
 
     private Manager manager;
-    private List<String> rentalList = new ArrayList<>(); //temp
 
     @FXML
-    private TextField username, title, daysRenting;
+    private TextField username, title;
     @FXML
     private TextArea description;
     @FXML
     private Label infoLabel;
     @FXML
-    private ListView<String> rentalPlaceList;
+    private ListView<String> rentalPlaceList, bookingList;
     @FXML
-    private VBox mainBox, newRentalBox;
+    private TabPane mainBox;
     @FXML
     private HBox loginBox;
     @FXML
     private Button logoutButton;
     @FXML
-    private DatePicker avaliableDateStart, avaliableDateEnd, rentStart;
+    private DatePicker avaliableDateStart, avaliableDateEnd, rentStart, rentEnd;
 
 
     @FXML
@@ -55,10 +43,18 @@ public class FireNBNController {
 
     @FXML
     private void handleLogin() {
-        manager.login(username.getText());
-        updateRentalPlaceList();
-        updateInfoLabel("Logget inn som " + manager.getCurrentUsername());
-        toggleVisible();
+        try {
+            manager.login(username.getText());
+            updateRentalPlaceList();
+            updateBookingList();
+            updateInfoLabel("Logget inn som " + manager.getCurrentUsername());
+            toggleVisible();
+            username.clear(); 
+        }
+        catch (IllegalArgumentException e) {
+            showErrorMessage(e.getMessage());
+        }
+        
     }
 
 
@@ -66,60 +62,74 @@ public class FireNBNController {
     private void handleLogout() {
         updateInfoLabel("Velkommen!");
         toggleVisible();
+        clearPlaceForm();
     }
 
 
     @FXML
     private void handleAddPlace() {
-        if(title.getText() == "") {
-            showErrorMessage("Feil verdier ved oppretting av nytt sted");
+        try {
+            manager.newRentalPlace(title.getText(), description.getText(), avaliableDateStart.getValue().toString(), avaliableDateEnd.getValue().toString());
+            updateInfoLabel("\"" + title.getText() + "\" ble lagt til!");
+            clearPlaceForm();
         }
-        else {
-            //manager.newRentalPlace(title.getText(), description.getText(), avaliableDateStart.getValue().toString(), avaliableDateEnd.getValue().toString());
-            rentalList.add(title.getText());
+        catch (IllegalArgumentException e) {
+            showErrorMessage(e.getMessage());
         }
-        
-        
-        //  TODO: Metode i Manager som validerer input for å leie sted
-        //if (true) {
-            //  TODO: Manager.newRentalPlace skal legge til currentUser automatisk
-        //    manager.newRentalPlace(title.getText(), description.getText(), "2022-09-09", "2022-10-10");
-        //}
-        //else {
-        //    info.setText("Feil ved oppretting av utleiested");
-        //}
+        catch (NullPointerException e) {
+            showErrorMessage("Alle feltene er ikke fylt ut");
+        }
     }
 
     @FXML
     private void handleRentPlace() {
-        String selectedPlace = rentalPlaceList.getSelectionModel().getSelectedItem();
-        //manager.rentPlace(rentStart.getValue().toString(), Integer.parseInt(daysRenting.getText()), selectedPlace);
-        updateRentalPlaceList();
+        try {
+            int selectedIndex = rentalPlaceList.getSelectionModel().getSelectedIndex();
+            manager.rentPlace(rentStart.getValue().toString(), rentEnd.getValue().toString(), selectedIndex);
+            updateRentalPlaceList();
+            updateBookingList();
+            updateInfoLabel("Bookingen ble lagt til!");
+            clearRentForm();
+        }
+        catch (IllegalArgumentException e) {
+            showErrorMessage(e.getMessage());
+        }
+        catch (NullPointerException e) {
+            showErrorMessage("Dato for leie er ikke oppgitt");
+        }
+        
         
     }
 
     private void initVisible() {
         mainBox.managedProperty().bind(mainBox.visibleProperty());
-        newRentalBox.managedProperty().bind(newRentalBox.visibleProperty());
         loginBox.managedProperty().bind(loginBox.visibleProperty());
         logoutButton.managedProperty().bind(logoutButton.visibleProperty());
         mainBox.setVisible(false);
-        newRentalBox.setVisible(false);
         logoutButton.setVisible(false);
     }
 
 
     private void toggleVisible() {
         mainBox.setVisible(!mainBox.isVisible());
-        newRentalBox.setVisible(!newRentalBox.isVisible());
         loginBox.setVisible(!loginBox.isVisible());
         logoutButton.setVisible(!logoutButton.isVisible());
     }
 
-
-
     private void updateInfoLabel(String info) {
         infoLabel.setText(info);
+    }
+
+    private void clearPlaceForm() {
+        title.clear();
+        description.clear();
+        avaliableDateEnd.getEditor().clear();
+        avaliableDateStart.getEditor().clear();
+    }
+
+    private void clearRentForm() {
+        rentStart.getEditor().clear();
+        rentEnd.getEditor().clear();
     }
 
     private void showErrorMessage(String errorMessage) {
@@ -132,6 +142,11 @@ public class FireNBNController {
 
 
     private void updateRentalPlaceList() {
-        rentalPlaceList.getItems().setAll(rentalList); //manager.getRentalList
+        rentalPlaceList.getItems().setAll(manager.getRentalStringList());
     }
+
+    private void updateBookingList() {
+        bookingList.getItems().setAll(manager.getBookingStringList());
+    }
+
 }

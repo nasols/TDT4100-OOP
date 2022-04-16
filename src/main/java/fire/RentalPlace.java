@@ -150,19 +150,22 @@ public class RentalPlace {
         return compareList.contains(this);
     }
 
-    public String toString() {
+    public String toString(boolean includeDates) {
         //return owner + name + description;
         String fas = ""; 
         String date = "";
+
         for (String e : facilities){
             fas = fas + e + ", ";
         }
 
-        for (LocalDate dat : availableDates){
+        if (includeDates) {
+            for (LocalDate dat : availableDates){
             date = date + dat + ", ";
-
+            }
         }
-        return this.name + "\n" + description + "\n" + fas + "\n" + date + "\n" + this.owner.getUsername();
+        
+        return this.name + "\n" + description + "\n" + fas + "\n" + this.owner.getUsername() + "\n" + date;
     }
 
 

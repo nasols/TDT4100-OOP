@@ -5,6 +5,8 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -13,7 +15,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fire.FireNBNController">
    <children>
@@ -42,88 +43,113 @@
                   <Insets />
                </VBox.margin>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <TabPane fx:id="mainBox" prefHeight="406.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab text="Hovedsiden">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="179.0" prefWidth="467.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Label text="Tilgjengelige leiligheter">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <ListView fx:id="rentalPlaceList" prefHeight="300.0" prefWidth="580.0">
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                    </ListView>
+                                    <HBox prefHeight="82.0" prefWidth="243.0">
+                                       <children>
+                                          <DatePicker fx:id="rentStart" promptText="Fra">
+                                             <HBox.margin>
+                                                <Insets bottom="5.0" left="5.0" top="5.0" />
+                                             </HBox.margin>
+                                          </DatePicker>
+                                          <DatePicker fx:id="rentEnd" promptText="Til">
+                                             <HBox.margin>
+                                                <Insets bottom="5.0" top="5.0" />
+                                             </HBox.margin>
+                                          </DatePicker>
+                                          <Button mnemonicParsing="false" onAction="#handleRentPlace" text="Lei Sted">
+                                             <HBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab text="Lei ut sted">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <VBox alignment="TOP_CENTER" prefHeight="173.0" prefWidth="215.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Label alignment="TOP_CENTER" text="Lei ut sted">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="title" promptText="Tittel">
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                    <TextArea fx:id="description" prefHeight="184.0" prefWidth="590.0" promptText="Forklaring">
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                    </TextArea>
+                                    <HBox prefHeight="100.0" prefWidth="200.0">
+                                       <children>
+                                          <DatePicker fx:id="avaliableDateStart" editable="false" promptText="Fra">
+                                             <HBox.margin>
+                                                <Insets right="5.0" />
+                                             </HBox.margin>
+                                          </DatePicker>
+                                          <DatePicker fx:id="avaliableDateEnd" promptText="Til">
+                                             <HBox.margin>
+                                                <Insets right="5.0" />
+                                             </HBox.margin>
+                                          </DatePicker>
+                                          <Button mnemonicParsing="false" onAction="#handleAddPlace" text="Legg til" />
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                  <Tab text="Mine bookinger">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <ListView fx:id="bookingList" layoutX="200.0" prefHeight="232.0" prefWidth="600.0" AnchorPane.bottomAnchor="-61.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
+            <HBox fx:id="loginBox" alignment="CENTER" prefHeight="100.0">
                <children>
-                  <VBox fx:id="newRentalBox" alignment="TOP_CENTER" prefHeight="313.0" prefWidth="186.0">
-                     <children>
-                        <Label alignment="TOP_CENTER" text="Lei ut sted">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="title" promptText="Tittel">
-                           <VBox.margin>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </VBox.margin>
-                        </TextField>
-                        <TextArea fx:id="description" prefHeight="199.0" prefWidth="164.0" promptText="Forklaring">
-                           <VBox.margin>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </VBox.margin>
-                        </TextArea>
-                        <HBox prefHeight="100.0" prefWidth="200.0">
-                           <children>
-                              <DatePicker fx:id="avaliableDateStart" editable="false" promptText="Fra" />
-                              <DatePicker fx:id="avaliableDateEnd" promptText="Til">
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                              </DatePicker>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </VBox.margin>
-                        </HBox>
-                        <Button mnemonicParsing="false" onAction="#handleAddPlace" text="Legg til">
-                           <VBox.margin>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </VBox.margin>
-                        </Button>
-                     </children>
-                  </VBox>
-                  <VBox fx:id="mainBox" alignment="TOP_CENTER" prefHeight="288.0">
-                     <children>
-                        <Label text="Tilgjengelige leiligheter">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <ListView fx:id="rentalPlaceList" prefHeight="200.0" prefWidth="200.0">
-                           <VBox.margin>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </VBox.margin>
-                        </ListView>
-                        <HBox prefHeight="100.0" prefWidth="200.0">
-                           <children>
-                              <DatePicker fx:id="rentStart" promptText="Fra">
-                                 <HBox.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                 </HBox.margin>
-                              </DatePicker>
-                              <TextField fx:id="daysRenting" promptText="Antall dager">
-                                 <HBox.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                 </HBox.margin>
-                              </TextField>
-                              <Button mnemonicParsing="false" onAction="#handleRentPlace" text="Lei Sted">
-                                 <HBox.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                 </HBox.margin>
-                              </Button>
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-                  <HBox fx:id="loginBox" alignment="CENTER" prefHeight="100.0">
-                     <children>
-                        <TextField fx:id="username" />
-                        <Button mnemonicParsing="false" onAction="#handleLogin" text="Logg inn" />
-                     </children>
-                  </HBox>
+                  <TextField fx:id="username" promptText="Brukernavn" />
+                  <Button mnemonicParsing="false" onAction="#handleLogin" text="Logg inn" />
                </children>
-               <padding>
-                  <Insets bottom="50.0" top="50.0" />
-               </padding>
             </HBox>
             <HBox alignment="CENTER" prefWidth="200.0">
                <children>

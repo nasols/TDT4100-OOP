@@ -73,7 +73,7 @@ public class Rating {
     }
 
     public static void main(String[] args) throws ParseException {
-
+        /*
         User Jonas = new User("jonas", "olsen", "2000-02-21", "nasbrigtols@gmail.com");
         User Henrik = new User("henrik", "log", "2000-03-18", "henrilja@gmail.com");
 
@@ -83,7 +83,7 @@ public class Rating {
         Rating rating1 = new Rating(5, "rått", Henrik, hinna);
 
         System.out.println(Henrik.getRating(rating).rater.getFirstName());
-        System.out.println(Jonas.getRentalPlace("hinna kåken").getRating(rating1).comment);
+        //System.out.println(Jonas.getRentalPlace("hinna kåken").getRating(rating1).comment);*/
         
     }
 }

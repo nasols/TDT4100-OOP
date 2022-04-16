@@ -21,7 +21,7 @@ public class Manager {
     }
     
     // sjekker om user allerede ligger i listen over brukere
-    private boolean validateUsername(String username){
+    /*private boolean validateUsername(String username){
         for(User e : users){
 
             if(e.getUsername() == username){
@@ -33,13 +33,13 @@ public class Manager {
         }
         return false;
   
-    }
+    }*/
 
     public void login(String username){
 
         User newUser = new User(username);
 
-        if(validateUsername(username) == false){
+        if(!users.contains(newUser)){
             users.add(newUser);
             currentUser = newUser;
             currentUsername = username;
@@ -70,6 +70,7 @@ public class Manager {
         if(name == "" || name.matches(pattern)){
             throw new IllegalArgumentException("kan ikke ha tomt felt i 'name' / bare repeterende karakterer, manager -> newRentalPlace");
         }
+        //Både manager og user har en newRentalPlace metode?
         currentUser.newRentalPlace(name, description, availableStart, availableEnd, args);
         RentalPlace newPlace = currentUser.getRentalPlace(currentUser.getAllRentalPlaces().size()-1);
         rentalPlaces.add(newPlace);
@@ -79,6 +80,9 @@ public class Manager {
     // leier plass, fra dato til dato, samt navnet på stedet du vil leie
     public void rentPlace(CharSequence date1, CharSequence date2, int indexOfPlace){
 
+        if (indexOfPlace == -1) {
+            throw new IllegalArgumentException("Velg et sted å leie");
+        }
         /**
          tar inn 2 datoer, fra og til dato, og hvilken bolig du vil leie 
          sjekker om datoene er innenfor et intervall tilhørende bolig 
@@ -90,7 +94,7 @@ public class Manager {
 
         RentalPlace wishedRented = rentalPlaces.get(indexOfPlace);
 
-        List<LocalDate> availableDates = wishedRented.availableDates;
+        List<LocalDate> availableDates = wishedRented.availableDates; //Ikkje lov 
 
         if(wishedRented.validateRentalDate(rentalDateStart, rentalDateEnd)){
 
@@ -113,6 +117,8 @@ public class Manager {
             }
             
             Collections.sort(availableDates, new LocalDateComparator());
+            // Tror d e her bookingen ska bli adda. Charsequence-Localdate
+            currentUser.addBooking(wishedRented, rentalDateStart.toString(), rentalDateEnd.toString());
             return;
 
         }
@@ -148,21 +154,22 @@ public class Manager {
 
     }
 
-    public List<String> toStringList(){
+    public List<String> getRentalStringList(){
 
         List<RentalPlace> displayList = rentalPlaces.stream().filter(e -> !e.inList(currentUser.getAllRentalPlaces())).toList();
 
         List<String> display = new ArrayList<>();
 
         for (RentalPlace rentalPlace : displayList) {
-            display.add(rentalPlace.toString());
+            display.add(rentalPlace.toString(true));
 
         };
         
         return display; 
+    }
 
-
-
+    public List<String> getBookingStringList() {
+        return currentUser.getBookingList();
     }
 
 
@@ -177,6 +184,7 @@ public class Manager {
 
 
         manager.login("hanne");
+        manager.newRentalPlace("name", "description", "2023-02-04", "2023-02-24", "args");
         manager.rentPlace("2023-02-08", "2023-02-15", 0);
         manager.newRentalPlace("trodden", "description", "2023-05-14", "2023-05-28", "args");
         
@@ -192,7 +200,8 @@ public class Manager {
         
         //System.out.println(manager.currentUser.rentalPlaces.get("hinna").availableDates);
     
-        //System.out.println(manager.toStringList());
+        System.out.println(manager.getRentalPlace(2));
+       // System.out.println(manager.toStringList().get(2));
 
 
 
