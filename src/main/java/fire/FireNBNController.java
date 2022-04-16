@@ -43,10 +43,18 @@ public class FireNBNController {
 
     @FXML
     private void handleLogin() {
-        manager.login(username.getText());
-        updateRentalPlaceList();
-        updateInfoLabel("Logget inn som " + manager.getCurrentUsername());
-        toggleVisible();
+        try {
+            manager.login(username.getText());
+            updateRentalPlaceList();
+            updateBookingList();
+            updateInfoLabel("Logget inn som " + manager.getCurrentUsername());
+            toggleVisible();
+            username.clear(); 
+        }
+        catch (IllegalArgumentException e) {
+            showErrorMessage(e.getMessage());
+        }
+        
     }
 
 
@@ -54,25 +62,42 @@ public class FireNBNController {
     private void handleLogout() {
         updateInfoLabel("Velkommen!");
         toggleVisible();
+        clearPlaceForm();
     }
 
 
     @FXML
     private void handleAddPlace() {
-        if(title.getText() == "") {
-            showErrorMessage("Feil verdier ved oppretting av nytt sted");
-        }
-        else {
+        try {
             manager.newRentalPlace(title.getText(), description.getText(), avaliableDateStart.getValue().toString(), avaliableDateEnd.getValue().toString());
-            //rentalList.add(title.getText());
+            updateInfoLabel("\"" + title.getText() + "\" ble lagt til!");
+            clearPlaceForm();
+        }
+        catch (IllegalArgumentException e) {
+            showErrorMessage(e.getMessage());
+        }
+        catch (NullPointerException e) {
+            showErrorMessage("Alle feltene er ikke fylt ut");
         }
     }
 
     @FXML
     private void handleRentPlace() {
-        int selectedIndex = rentalPlaceList.getSelectionModel().getSelectedIndex();
-        manager.rentPlace(rentStart.getValue().toString(), rentEnd.getValue().toString(), selectedIndex);
-        updateRentalPlaceList();
+        try {
+            int selectedIndex = rentalPlaceList.getSelectionModel().getSelectedIndex();
+            manager.rentPlace(rentStart.getValue().toString(), rentEnd.getValue().toString(), selectedIndex);
+            updateRentalPlaceList();
+            updateBookingList();
+            updateInfoLabel("Bookingen ble lagt til!");
+            clearRentForm();
+        }
+        catch (IllegalArgumentException e) {
+            showErrorMessage(e.getMessage());
+        }
+        catch (NullPointerException e) {
+            showErrorMessage("Dato for leie er ikke oppgitt");
+        }
+        
         
     }
 
@@ -95,6 +120,18 @@ public class FireNBNController {
         infoLabel.setText(info);
     }
 
+    private void clearPlaceForm() {
+        title.clear();
+        description.clear();
+        avaliableDateEnd.getEditor().clear();
+        avaliableDateStart.getEditor().clear();
+    }
+
+    private void clearRentForm() {
+        rentStart.getEditor().clear();
+        rentEnd.getEditor().clear();
+    }
+
     private void showErrorMessage(String errorMessage) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Error");
@@ -105,8 +142,11 @@ public class FireNBNController {
 
 
     private void updateRentalPlaceList() {
-        System.out.println(manager.toStringList());
-        System.out.println(manager.getCurrentUsername());
-        rentalPlaceList.getItems().setAll(manager.toStringList());
+        rentalPlaceList.getItems().setAll(manager.getRentalStringList());
     }
+
+    private void updateBookingList() {
+        bookingList.getItems().setAll(manager.getBookingStringList());
+    }
+
 }

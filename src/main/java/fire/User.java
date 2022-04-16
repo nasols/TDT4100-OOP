@@ -10,11 +10,11 @@ import java.util.List;
 public class User {
     // brukerinfo
     private String username;
-    private String firstName;
+    /*private String firstName;
     private String lastName; 
     LocalDate birthdate;
     private int age;
-    String mail; 
+    String mail; */
     
     // Brukerens ratings
     List<Rating> personRatings = new ArrayList<>();
@@ -23,13 +23,14 @@ public class User {
     List<RentalPlace> rentalPlaces = new ArrayList<>();
 
     // steder og datoer brukeren skal leie andre steder (egen ferie)
-    LinkedHashMap<String, RentalPlace> rentedPlaces = new LinkedHashMap<>();
-    LinkedHashMap<String, List<LocalDate>> rentedDates = new LinkedHashMap<>();
+    //LinkedHashMap<String, RentalPlace> rentedPlaces = new LinkedHashMap<>();
+    //LinkedHashMap<String, List<LocalDate>> rentedDates = new LinkedHashMap<>();
+    List<Booking> bookings = new ArrayList<>();
 
     // validations 
 
     // sjekker om navn bare inneholder bokstaver 
-    private boolean validateName(String inputName){
+    /*private boolean validateName(String inputName){
         if (inputName.matches("[a-zA-Z]+")){
             return true;
 
@@ -82,10 +83,13 @@ public class User {
         // if validate mail --> set mail 
         this.mail = mail; 
 
-    }
+    }*/
     
     // mindre konstruktør
     public User(String username){
+        if (username == "") {
+            throw new IllegalArgumentException("Vennligst skriv inn et brukernavn");
+        }
         this.username = username; 
 
     }
@@ -94,7 +98,7 @@ public class User {
     public String getUsername(){
         return this.username;
 
-    }
+    }/*
     public String getFirstName(){
         return this.firstName;
 
@@ -106,7 +110,7 @@ public class User {
     public int getAge(){
         return this.age;
 
-    }
+    }*/
 
 
 
@@ -175,7 +179,7 @@ public class User {
     
     }
 
-    public void addRentedPlace(String nameOfRentalPlace, RentalPlace rentalPlace){
+    /*public void addRentedPlace(String nameOfRentalPlace, RentalPlace rentalPlace){
         rentedPlaces.put(nameOfRentalPlace, rentalPlace);
 
 
@@ -187,13 +191,24 @@ public class User {
         startEndDates.add(endDate);
         rentedDates.put(nameOfRentalPlace, startEndDates);
 
+    }*/
+
+    public void addBooking(RentalPlace bookedPlace, CharSequence bookingStart, CharSequence bookingEnd) {
+        bookings.add(new Booking(bookedPlace, bookingStart, bookingEnd));
     }
 
 
+    public List<String> getBookingList() {
+        List<String> bookingList = new ArrayList<>();
+        for (Booking booking : bookings) {
+            bookingList.add(booking.toString());
+        }
+        return bookingList;
+    }
    
     public static void main(String[] args) throws ParseException {
-        User Jonas = new User("jonas", "olsen", "2000-02-21", "nasbrigtols@gmail.com");
-        System.out.println(Jonas.age);
+        //User Jonas = new User("jonas", "olsen", "2000-02-21", "nasbrigtols@gmail.com");
+        //System.out.println(Jonas.age);
 
 
 

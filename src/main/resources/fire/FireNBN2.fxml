@@ -147,7 +147,7 @@
             </TabPane>
             <HBox fx:id="loginBox" alignment="CENTER" prefHeight="100.0">
                <children>
-                  <TextField fx:id="username" />
+                  <TextField fx:id="username" promptText="Brukernavn" />
                   <Button mnemonicParsing="false" onAction="#handleLogin" text="Logg inn" />
                </children>
             </HBox>
