@@ -77,3 +77,9 @@ public class LeseFraFilLageTing {
  * trenger forsåvidt en slags id på alle ting som skrives til fil, altså alle boliger vil skrives til fil med en "owner" som første del av strengen/ listen med info så me vett ka bruker boligen høre til 
  * booking trenge det samme, så når en booking skrives til fil må me ha en linje som indikere hvilken User bookingen hører til. 
  */
+/**
+ * alternativt kan me lese bruker - så alle boligene t den brukeren 
+ * så neste bruker og alle dens boliger 
+ * osv
+ * så alle bookings ittepå 
+ */
