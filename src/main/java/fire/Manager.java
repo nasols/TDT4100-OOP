@@ -166,6 +166,10 @@ public class Manager {
         return currentUser.getBookingList();
     }
 
+    public void wfefwefwefweff() {
+        System.out.println(1);
+    }
+
     public void logout(){
         this.currentUser = null; 
         this.currentUsername = null;
