@@ -39,7 +39,11 @@ public class RentalPlace {
     }
 
     public String getAvaliableDatesString() {
-        return availableDates.toString();
+        String dateString = "";
+        for (LocalDate date : availableDates) {
+            dateString = dateString + date.toString() + ",";
+        }
+        return dateString;
     }
 
     public boolean validateRentalDate(LocalDate ... checkdates){
