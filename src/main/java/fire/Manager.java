@@ -14,7 +14,9 @@ public class Manager {
     private List<User> users = new ArrayList<>();
 
 
-
+    public List<User> getUsers() {
+        return users;
+    }
 
     public String getCurrentUsername() {
         return currentUsername;
@@ -172,8 +174,6 @@ public class Manager {
         return currentUser.getBookingList();
     }
 
-
-    // mana
     public static void main(String[] args) {
         Manager manager = new Manager();
 

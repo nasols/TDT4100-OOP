@@ -30,6 +30,18 @@ public class RentalPlace {
     String description; 
 
 
+    public String getTitle() {
+        return this.name;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public String getAvaliableDatesString() {
+        return availableDates.toString();
+    }
+
     public boolean validateRentalDate(LocalDate ... checkdates){
 
         /**

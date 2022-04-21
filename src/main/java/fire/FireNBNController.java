@@ -1,5 +1,8 @@
 package fire;
 
+import java.io.IOException;
+import java.util.NoSuchElementException;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -16,6 +19,7 @@ import javafx.scene.layout.HBox;
 public class FireNBNController {
 
     private Manager manager;
+    private ISaveHandler saveHandler = new SaveHandler();
 
     @FXML
     private TextField username, title;
@@ -149,4 +153,18 @@ public class FireNBNController {
         bookingList.getItems().setAll(manager.getBookingStringList());
     }
 
+    public void exit() {
+        try {
+            System.out.println("Lagrer...");
+            saveHandler.writeReciept(manager);
+        }
+        catch (IOException e) {
+            System.out.println(e);
+            showErrorMessage("Feil ved lagring av data");
+        }
+        catch (NoSuchElementException e) {
+            System.out.println(e);
+            //Trenge me denne?
+        }
+    }
 }
