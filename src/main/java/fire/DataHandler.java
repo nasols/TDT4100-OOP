@@ -9,25 +9,30 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class DataHandler implements IDataHandler {
 
     @Override
-    public void writeData(Manager manager) throws FileNotFoundException {
+    public void writeData(Manager manager) throws FileNotFoundException, URISyntaxException {
         try (PrintWriter writer = new PrintWriter(getDataFile())) {
             for (User user : manager.getUsers()) {
-                for (RentalPlace place : user.getAllRentalPlaces()) {
-                    
+                
+                writer.println(user.getUsername());
+                
+                List<RentalPlace> rentalPlaces = user.getAllRentalPlaces();
+                writer.println(rentalPlaces.size());
+
+                for (RentalPlace place : rentalPlaces) {
+                    String description = place.getDescription();
+                    //Bytter ut "\n" med "<br>" for beskrivelsen av stedene
+                    description = description.replaceAll("\n", "<br>");
+                    writer.println(String.format("%s;%s;%s", place.getTitle(), description, place.getAvaliableDatesString()));
                 }
-                writer.println(String.format("%s;%s;%s", user.getUsername(), "2", "3"));
             }
         }
-        catch (URISyntaxException e) {
-            System.out.println(e);
-        }
-
-    } 
+    }
 
     private static String getDataFile() throws URISyntaxException {
         URI uri = new URI(DataHandler.class.getResource("data/").toString() + "dat.txt");

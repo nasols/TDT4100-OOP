@@ -1,6 +1,7 @@
 package fire;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.NoSuchElementException;
 
 import javafx.fxml.FXML;
@@ -162,6 +163,10 @@ public class FireNBNController {
         catch (IOException e) {
             System.out.println(e);
             showErrorMessage("Feil ved lagring av data");
+        }
+        catch (URISyntaxException e) {
+            System.out.println(e);
+            showErrorMessage("Feil ved filplassering");
         }
         catch (NoSuchElementException e) {
             System.out.println(e);
