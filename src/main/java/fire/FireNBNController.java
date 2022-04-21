@@ -64,6 +64,7 @@ public class FireNBNController {
 
     @FXML
     private void handleLogout() {
+        manager.logout();
         updateInfoLabel("Velkommen!");
         toggleVisible();
         clearPlaceForm();
