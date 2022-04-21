@@ -19,7 +19,7 @@ import javafx.scene.layout.HBox;
 public class FireNBNController {
 
     private Manager manager;
-    private ISaveHandler saveHandler = new SaveHandler();
+    private IDataHandler saveHandler = new DataHandler();
 
     @FXML
     private TextField username, title;
@@ -157,7 +157,7 @@ public class FireNBNController {
     public void exit() {
         try {
             System.out.println("Lagrer...");
-            saveHandler.writeReciept(manager);
+            saveHandler.writeData(manager);
         }
         catch (IOException e) {
             System.out.println(e);
