@@ -1,20 +1,13 @@
 package fire;
 
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 
 public class User {
     // brukerinfo
     private String username;
-    /*private String firstName;
-    private String lastName; 
-    LocalDate birthdate;
-    private int age;
-    String mail; */
     
     // Brukerens ratings
     List<Rating> personRatings = new ArrayList<>();
@@ -23,8 +16,6 @@ public class User {
     List<RentalPlace> rentalPlaces = new ArrayList<>();
 
     // steder og datoer brukeren skal leie andre steder (egen ferie)
-    //LinkedHashMap<String, RentalPlace> rentedPlaces = new LinkedHashMap<>();
-    //LinkedHashMap<String, List<LocalDate>> rentedDates = new LinkedHashMap<>();
     List<Booking> bookings = new ArrayList<>();
 
     // validations 
@@ -94,7 +85,6 @@ public class User {
 
     }
     // getters & setters 
-
     public String getUsername(){
         return this.username;
 
@@ -136,14 +126,8 @@ public class User {
 
     }
 
-    public void newRentalPlace(String name, String description, CharSequence availableStart, CharSequence availableEnd, String ... args){
-        
-        RentalPlace newPlace = new RentalPlace(this, name, description, availableStart, availableEnd, args);
-        addRentalPlace(newPlace);
-        
-    }
-        
-
+    
+    
 
     public Rating getRating(Rating rating){
         if(personRatings.indexOf(rating) != -1 ){
@@ -178,6 +162,7 @@ public class User {
 
     
     }
+    
 
     /*public void addRentedPlace(String nameOfRentalPlace, RentalPlace rentalPlace){
         rentedPlaces.put(nameOfRentalPlace, rentalPlace);
@@ -207,8 +192,8 @@ public class User {
     }
    
     public static void main(String[] args) throws ParseException {
-        //User Jonas = new User("jonas", "olsen", "2000-02-21", "nasbrigtols@gmail.com");
-        //System.out.println(Jonas.age);
+        //User Jonas = new User("jonas");
+        //System.out.println(Jonas.bookings.get(0));
 
 
 

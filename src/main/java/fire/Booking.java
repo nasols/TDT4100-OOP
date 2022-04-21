@@ -14,4 +14,9 @@ public class Booking {
     public String toString() {
         return bookedPlace.toString(false) + "\n Booket fra " + bookingStart + " til " + bookingEnd;
     }
+
+    public String toFileString(){
+        return bookedPlace.toString(false) + this.bookingStart + "\n" + this.bookingEnd;
+
+    }
 }
