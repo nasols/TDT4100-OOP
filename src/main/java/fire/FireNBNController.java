@@ -15,7 +15,7 @@ import javafx.scene.layout.HBox;
 
 public class FireNBNController {
 
-    private Manager manager;
+    public Manager manager;
 
     @FXML
     private TextField username, title;

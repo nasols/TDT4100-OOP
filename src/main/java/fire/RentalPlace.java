@@ -133,6 +133,34 @@ public class RentalPlace {
 
  
     }
+
+    // konstruktør2, "offline" konstruktør 
+    // vet at datoer her vil ver gyldige, altså trenger ikke validering, denne brukes bare ved filLesning av allerede-validerte boliger. 
+    public RentalPlace(User owner, String name, String description, CharSequence[] fromToDatesInput, String[] fasiliteter){
+        ArrayList<LocalDate> fromToDates = new ArrayList<>();
+        ArrayList<CharSequence> chars = new ArrayList<>(Arrays.asList(fromToDatesInput));
+        chars.stream().forEach(e -> fromToDates.add(LocalDate.parse(e)));
+        if (this.owner == owner){
+            return;
+        }
+    
+        //skaper assosiasjonen mellom eier og plassen
+        this.owner = owner;
+        this.name = name;
+        this.description = description;
+        this.availableDates = fromToDates;
+        
+        
+        
+        for (String e: fasiliteter){
+            facilities.add(e);
+
+        }
+
+     
+ 
+    }
+
     public void addRating(Rating rating){
         placeRatings.add(rating);
 
@@ -171,13 +199,15 @@ public class RentalPlace {
 
     public static void main(String[] args) throws ParseException {
         User Jonas = new User("Jonas");
-        RentalPlace hinna = new RentalPlace(Jonas, "hinnna kåken", "fin og flott plass", "2023-02-03", "2023-02-20", "badebasseng", "tog like ved :)", "fugletitting", "internett");
+        CharSequence[] dates = {"2023-02-03", "2023-02-20"};
+        String[] fasaliteter = {"badebasseng", "tog like ved :)", "fugletitting", "internett"};
+        RentalPlace hinna = new RentalPlace(Jonas, "hinnna kåken", "fin og flott plass", dates, fasaliteter);
         
         LocalDate dato1 = LocalDate.parse("2023-02-05");
         LocalDate dato2 = LocalDate.parse("2023-02-18");
 
         System.out.println(hinna.validateRentalDate(dato1, dato2));
-        System.out.println(hinna.toString());
+        System.out.println(hinna.toString(false));
 
         
         
