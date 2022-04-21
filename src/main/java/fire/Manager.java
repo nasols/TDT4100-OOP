@@ -166,17 +166,15 @@ public class Manager {
         return currentUser.getBookingList();
     }
 
-<<<<<<< HEAD
-=======
     public void logout(){
         this.currentUser = null; 
         this.currentUsername = null;
-
+        //rgeg
+        System.out.println(1);
     }
 
 
     // mana
->>>>>>> 8fd22278c6b6861de9d2c35f0ed71b2bee8a132a
     public static void main(String[] args) {
         Manager manager = new Manager();
 
