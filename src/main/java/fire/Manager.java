@@ -44,13 +44,18 @@ public class Manager {
 
     public void login(String username){
 
+<<<<<<< HEAD
 
         if(!users.stream().anyMatch(e -> username == e.getUsername())){
             User newUser = new User(username);
+=======
+        User newUser = new User(username);
+        
+        if(!users.stream().anyMatch(e -> e.getUsername().equals(username))){
+>>>>>>> 4ce912234ba0e8b565ee8da04889eeaba2f6aa48
             users.add(newUser);
             currentUser = newUser;
             currentUsername = username;
-
         }
         else{
             for (User e : users){
@@ -177,13 +182,19 @@ public class Manager {
         Manager manager = new Manager();
 
         manager.login("Jonas");
+<<<<<<< HEAD
         manager.newRentalPlace("hinna", "description", "2023-02-04", "2023-02-21", "hei", "og", "hopp", "din fluesopp");
         manager.newRentalPlace("olso", "kompis", "2023-02-04", "2023-02-21", "internett", "badebasseng");
         manager.logout();
+=======
+        //manager.newRentalPlace("hinna", "description", "2023-02-04", "2023-02-21", "hei", "og", "hopp", "din fluesopp");
+        //manager.newRentalPlace("olso", "kompis", "2023-02-04", "2023-02-21", "internett", "badebasseng");
+>>>>>>> 4ce912234ba0e8b565ee8da04889eeaba2f6aa48
         //System.out.println(manager.getCurrentUser().rentalPlaces.get(0).availableDates);
 
 
         manager.login("hanne");
+<<<<<<< HEAD
         manager.newRentalPlace("name", "description", "2023-02-04", "2023-02-24", "args");
         manager.rentPlace("2023-02-08", "2023-02-15", 0);
         manager.newRentalPlace("trodden", "description", "2023-05-14", "2023-05-28", "args");
@@ -201,13 +212,34 @@ public class Manager {
         manager.rentPlace("2023-02-05", "2023-02-10", 5);
         System.out.println(manager.getRentalStringList());
         manager.logout();
+=======
+        //manager.newRentalPlace("name", "description", "2023-02-04", "2023-02-24", "args");
+        //manager.rentPlace("2023-02-08", "2023-02-15", 0);
+        //manager.newRentalPlace("trodden", "description", "2023-05-14", "2023-05-28", "args");
+        
+        manager.login("Jonas");
+        //manager.newRentalPlace("bygd", "råtass", "2023-02-04", "2023-02-21", "args");
+
+        manager.login("papsen");
+        //manager.newRentalPlace("nmr17", "råtass", "2023-02-04", "2023-02-21", "args");
+
+        manager.login("hanne");
+        //manager.rentPlace("2023-02-05", "2023-02-10", 5);
+        //System.out.println(manager.getCurrentUser().rentalPlaces.get(0).availableDates);
+        
+>>>>>>> 4ce912234ba0e8b565ee8da04889eeaba2f6aa48
         //System.out.println(manager.rentalPlaces.get(5).name);
     
         //System.out.println(manager.getRentalPlace(2));
         //System.out.println(manager.toStringList().get(2));
 
         //System.out.println(manager.getCurrentUser().bookings.get(1).toFileString());
+<<<<<<< HEAD
         //System.out.println(manager.testDato);
+=======
+        manager.login("Jonas");
+        System.out.println(manager.getUsers().size());
+>>>>>>> 4ce912234ba0e8b565ee8da04889eeaba2f6aa48
 
     }
 

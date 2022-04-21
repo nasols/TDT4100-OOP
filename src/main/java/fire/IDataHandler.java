@@ -7,5 +7,5 @@ public interface IDataHandler {
 
     Manager readData() throws IOException, URISyntaxException;
 
-    void writeData(Manager manager) throws IOException;
+    void writeData(Manager manager) throws IOException, URISyntaxException;
 }
