@@ -44,9 +44,9 @@ public class Manager {
 
     public void login(String username){
 
-        User newUser = new User(username);
 
         if(!users.stream().anyMatch(e -> username == e.getUsername())){
+            User newUser = new User(username);
             users.add(newUser);
             currentUser = newUser;
             currentUsername = username;
@@ -179,6 +179,7 @@ public class Manager {
         manager.login("Jonas");
         manager.newRentalPlace("hinna", "description", "2023-02-04", "2023-02-21", "hei", "og", "hopp", "din fluesopp");
         manager.newRentalPlace("olso", "kompis", "2023-02-04", "2023-02-21", "internett", "badebasseng");
+        manager.logout();
         //System.out.println(manager.getCurrentUser().rentalPlaces.get(0).availableDates);
 
 
@@ -186,24 +187,27 @@ public class Manager {
         manager.newRentalPlace("name", "description", "2023-02-04", "2023-02-24", "args");
         manager.rentPlace("2023-02-08", "2023-02-15", 0);
         manager.newRentalPlace("trodden", "description", "2023-05-14", "2023-05-28", "args");
+        manager.logout();
         
         manager.login("Jonas");
         manager.newRentalPlace("bygd", "råtass", "2023-02-04", "2023-02-21", "args");
+        manager.logout();
 
         manager.login("papsen");
         manager.newRentalPlace("nmr17", "råtass", "2023-02-04", "2023-02-21", "args");
+        manager.logout();
 
-        manager.login("hanne");
+        manager.login("Jonas");
         manager.rentPlace("2023-02-05", "2023-02-10", 5);
-        //System.out.println(manager.getCurrentUser().rentalPlaces.get(0).availableDates);
-        
+        System.out.println(manager.getRentalStringList());
+        manager.logout();
         //System.out.println(manager.rentalPlaces.get(5).name);
     
         //System.out.println(manager.getRentalPlace(2));
         //System.out.println(manager.toStringList().get(2));
 
         //System.out.println(manager.getCurrentUser().bookings.get(1).toFileString());
-        System.out.println(manager.testDato);
+        //System.out.println(manager.testDato);
 
     }
 

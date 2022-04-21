@@ -17,64 +17,6 @@ public class User {
 
     // steder og datoer brukeren skal leie andre steder (egen ferie)
     List<Booking> bookings = new ArrayList<>();
-
-    // validations 
-
-    // sjekker om navn bare inneholder bokstaver 
-    /*private boolean validateName(String inputName){
-        if (inputName.matches("[a-zA-Z]+")){
-            return true;
-
-        }
-        else{
-            return false;
-        }
-    }
-    // sjekker om input birthdate er før dags dato, eller mer enn 100 år siden
-    private boolean validateBirthdate(LocalDate birthdate){
-        LocalDate today = LocalDate.now();
-        LocalDate cutOff = LocalDate.parse("1920-01-01");
-        if (today.isBefore(birthdate) || birthdate.isBefore(cutOff)){
-            return false;
-        }
-        else{
-            return true;
-
-        }
-        
-    }
-    // sjekker mail på riktig format 
-    // legg inn kode fra tidligere øving (log :) ) 
-
-    // konstruktør 
-    public User(String firstName, String lastName, CharSequence birthdate, String mail) throws ParseException{
-        LocalDate testBirthdate = LocalDate.parse(birthdate);
-
-        if(validateName(firstName) && validateName(lastName)){
-            this.firstName = firstName;
-            this.lastName = lastName;
-
-        }
-        else{
-            throw new IllegalArgumentException("feil format på navn");
-
-        }
-        
-        if(validateBirthdate(testBirthdate)){
-            this.birthdate = testBirthdate;
-            LocalDate today = LocalDate.now();
-            int year = today.getYear();
-            this.age = year - testBirthdate.getYear();
-
-        }
-        else{
-            throw new IllegalArgumentException("feil format på bursdag"); 
-
-        }
-        // if validate mail --> set mail 
-        this.mail = mail; 
-
-    }*/
     
     // mindre konstruktør
     public User(String username){
@@ -88,21 +30,7 @@ public class User {
     public String getUsername(){
         return this.username;
 
-    }/*
-    public String getFirstName(){
-        return this.firstName;
-
     }
-    public String getLastName(){
-        return this.lastName;
-        
-    }
-    public int getAge(){
-        return this.age;
-
-    }*/
-
-
 
     public List<RentalPlace> getAllRentalPlaces(){
         return rentalPlaces;
@@ -125,9 +53,6 @@ public class User {
         
 
     }
-
-    
-    
 
     public Rating getRating(Rating rating){
         if(personRatings.indexOf(rating) != -1 ){
