@@ -16,7 +16,7 @@ public class Booking {
     }
 
     public String toFileString(){
-        return bookedPlace.toString(false) + this.bookingStart + "\n" + this.bookingEnd;
+        return bookedPlace.toString(false) + ";" + this.bookingStart + "," + this.bookingEnd;
 
     }
 }

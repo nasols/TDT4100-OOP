@@ -1,9 +1,7 @@
 package fire;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -20,6 +18,8 @@ public class DataHandler implements IDataHandler {
             for (User user : manager.getUsers()) {
                 
                 writer.println(user.getUsername());
+
+
                 
                 List<RentalPlace> rentalPlaces = user.getAllRentalPlaces();
                 writer.println(rentalPlaces.size());
@@ -31,6 +31,28 @@ public class DataHandler implements IDataHandler {
                     writer.println(String.format("%s;%s;%s", place.getTitle(), description, place.getAvaliableDatesString()));
                 }
             }
+
+
+            
+        }
+        try ( PrintWriter writer = new PrintWriter(getDataFileBookigs())){
+            for (User user : manager.getUsers()) {
+                writer.println(user.getUsername());
+                System.out.println("Username: " + user.getUsername());
+
+                List<String> bookingStrings = user.getBookingListFileWrite();
+
+                System.out.println("Bookings:");
+                bookingStrings.forEach(l -> System.out.println(l));
+
+                writer.println(bookingStrings.size());
+
+                for (String s : bookingStrings){
+                    s = s.replaceAll("\n", ";");
+                    writer.println(s);
+
+                }
+            }
         }
     }
 
@@ -38,58 +60,85 @@ public class DataHandler implements IDataHandler {
         URI uri = new URI(DataHandler.class.getResource("data/").toString() + "dat.txt");
         return uri.getPath();
     }
+    private static String getDataFileBookigs() throws URISyntaxException {
+        URI uri = new URI(DataHandler.class.getResource("data/").toString() + "datbookings.txt");
+        return uri.getPath();
+    }
 
     public Manager readData() throws FileNotFoundException, URISyntaxException{
         Manager manager = new Manager(); 
         try( Scanner scanner = new Scanner(new FileReader(getDataFile()))){
             while(scanner.hasNext()){
-                ArrayList<String> brukerInfo = new ArrayList<>(Arrays.asList(scanner.nextLine().split(", ")));
+                
+                ArrayList<String> brukerInfo = new ArrayList<>(Arrays.asList(scanner.nextLine().split("\n")));
                 String username = brukerInfo.get(0);
                 userFromFile(brukerInfo, manager);
+            
+
+                int antallBoliger = Integer.parseInt(scanner.nextLine());
                 
-
-                int antallBookinger = scanner.nextInt();
-                for (int i = 0; i<antallBookinger; i ++){
-
-                    ArrayList<String> bookingInfo = new ArrayList<>(Arrays.asList(scanner.nextLine().split("\n")));
-                    bookingFromFile(username, bookingInfo, manager);
-                }
-
-                int antallBoliger = scanner.nextInt();
                 for (int i = 0 ; i<antallBoliger ; i ++ ){
 
-                    ArrayList<String> boligInfo = new ArrayList<>(Arrays.asList(scanner.nextLine().split("\n")));
+                    ArrayList<String> boligInfo = new ArrayList<>(Arrays.asList(scanner.nextLine().split(";")));
                     boligFromFile(username, boligInfo, manager);
                     
                 }
-
             }
         }
+        try ( Scanner scanner = new Scanner(new FileReader(getDataFileBookigs()))){
+
+            while ( scanner.hasNext() ){
+                String username = scanner.nextLine();
+                
+
+                int antallBookings = Integer.parseInt(scanner.nextLine());
+
+
+                for ( int i = 0; i< antallBookings ; i ++){
+                    ArrayList<String> bookingInfo = new ArrayList<>(Arrays.asList(scanner.nextLine().split(";")));
+                    bookingInfo.remove("");
+                    bookingFromFile(username, bookingInfo, manager);
+
+                }
+
+            }
+            scanner.close();
+        }
+        
         return manager;
     }
 
     private void userFromFile(ArrayList<String> brukerInfo, Manager manager){
         // legger til passord her og, blir nextline igjen, altså format: username \n passord 
         manager.login(brukerInfo.get(0));
-        manager.logout();
+        
 
 
     }
 
     private void boligFromFile(String username, ArrayList<String> boligInfo, Manager manager){
-    
+        
         User owner = manager.getUser(username);
         String name = boligInfo.get(0);
         String description = boligInfo.get(1); 
-        String[] fasaliteter = (boligInfo.get(2).split(", "));
-        CharSequence[] dates = boligInfo.get(4).split(", ");
-        manager.newRentalPlaceOffline(owner, name, description, dates, fasaliteter);
+        CharSequence[] dates = boligInfo.get(2).split(",");
+        manager.newRentalPlaceOffline(owner, name, description, dates);
+        
+        
 
 
     }
-
+    
     private void bookingFromFile(String username, ArrayList<String> bookingInfo, Manager manager){
-        User userName = manager.getUser(username);
-        String placeName = bookingInfo.get(0);
+   
+        RentalPlace rentalPlace = manager.getRentalPlaceByName(bookingInfo.get(0));
+        CharSequence bookingStart = bookingInfo.get(3);
+        CharSequence bookingEnd = bookingInfo.get(4);
+        manager.getUsers().stream().forEach(u -> System.out.println(u.getUsername()));
+        // kan ikke bruke getCurrentUser()
+        manager.addBookingOffline(username, rentalPlace, bookingStart, bookingEnd);
     }
+    
+    
+
 }

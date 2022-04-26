@@ -20,7 +20,7 @@ import javafx.scene.layout.HBox;
 public class FireNBNController {
 
     private Manager manager;
-    private IDataHandler saveHandler = new DataHandler();
+    private DataHandler saveHandler = new DataHandler();
 
     @FXML
     private TextField username, title;
@@ -41,8 +41,8 @@ public class FireNBNController {
 
 
     @FXML
-    public void initialize() {
-        this.manager = new Manager();
+    public void initialize() throws IOException, URISyntaxException {
+        this.manager = saveHandler.readData();
         initVisible();
     }
 
@@ -55,6 +55,7 @@ public class FireNBNController {
             updateInfoLabel("Logget inn som " + manager.getCurrentUsername());
             toggleVisible();
             username.clear(); 
+            logoutButton.setStyle("-fx-background-color: red;");
         }
         catch (IllegalArgumentException e) {
             showErrorMessage(e.getMessage());
@@ -65,7 +66,6 @@ public class FireNBNController {
 
     @FXML
     private void handleLogout() {
-        //manager.logout();
         updateInfoLabel("Velkommen!");
         toggleVisible();
         clearPlaceForm();
