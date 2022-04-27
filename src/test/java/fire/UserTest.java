@@ -17,7 +17,7 @@ public class UserTest {
         Assertions.assertThrows(IllegalArgumentException.class, () -> new User(""));
 
         User user1 = new User("jonas");
-        User user2 = new User("123");
+        User user2 = new User("jonas123");
 
         String expected1 = "jonas";
         String actual1 = user1.getUsername();
@@ -34,7 +34,6 @@ public class UserTest {
         RentalPlace place1  = new RentalPlace(user1, "name", "description", "2023-01-01", "2023-01-20");
         RentalPlace place2 = new RentalPlace(user1, "name", "description", "2023-02-01", "2023-02-20");
         user1.addRentalPlace(place1);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> user1.addRentalPlace(place2));
 
 
     }

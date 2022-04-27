@@ -33,21 +33,12 @@ public class User {
  
     }
     public RentalPlace getRentalPlace(int index){
-
         return rentalPlaces.get(index);
-
     }
 
     public void addRentalPlace(RentalPlace rentalPlace){
-        for (RentalPlace place : rentalPlaces) {
-            if(place.getTitle().equals(rentalPlace.getTitle())){
-                throw new IllegalArgumentException("allerede eksisterende bolig, user -> addRentalPlace");
-
-            }
-        }
         rentalPlaces.add(rentalPlace);
         
-
     }
 
     

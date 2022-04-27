@@ -79,6 +79,11 @@ public class Manager {
         
         //Både manager og user har en newRentalPlace metode?
         // fikset 
+        if ( this.currentUser.getAllRentalPlaces().stream().anyMatch(r -> r.getTitle().equals(name)) ){
+
+            throw new IllegalArgumentException("allerede eksisterende bolig, Manager -> newRentalPlace");
+            
+        }
         RentalPlace newPlace = new RentalPlace(this.currentUser, name, description, availableStart, availableEnd);
         rentalPlaces.add(newPlace);
         currentUser.addRentalPlace(newPlace);
