@@ -115,11 +115,11 @@ public class Manager {
         if (indexOfPlace == -1) {
             throw new IllegalArgumentException("Velg et sted å leie");
         }
-        /**
+        /*
          tar inn 2 datoer, fra og til dato, og hvilken bolig du vil leie 
          sjekker om datoene er innenfor et intervall tilhørende bolig 
          oppdaterer så listen over ledige datoer til boligen
-         */
+        */
 
         LocalDate rentalDateStart = LocalDate.parse(date1);
         LocalDate rentalDateEnd = LocalDate.parse(date2);
@@ -151,11 +151,7 @@ public class Manager {
             Collections.sort(availableDates, new LocalDateComparator());
 
             currentUser.addBooking(wishedRented, rentalDateStart.toString(), rentalDateEnd.toString());
-            return;
-
         }
-        throw new IllegalArgumentException("ugyldig intervall gitt inn, manager -> rentPlace");
-
     }
 
 
@@ -186,14 +182,5 @@ public class Manager {
 
     public List<RentalPlace> getAllRentalplaces (){
         return rentalPlaces;
-    }
-
-    // mana
-    public static void main(String[] args) {
-
-        
-    }
-
-
-    
+    } 
 }
