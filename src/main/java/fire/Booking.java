@@ -15,6 +15,7 @@ public class Booking {
         return bookedPlace.toString(false) + "\n Booket fra " + bookingStart + " til " + bookingEnd;
     }
 
+    //Streng som beskriver en booking og skal lagres i fil
     public String toFileString(){
         return bookedPlace.toString(false) + ";" + this.bookingStart + "," + this.bookingEnd;
 

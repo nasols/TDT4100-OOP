@@ -14,12 +14,10 @@ public class DataHandler implements IDataHandler {
 
     @Override
     public void writeData(Manager manager) throws FileNotFoundException, URISyntaxException {
-        try (PrintWriter writer = new PrintWriter(getDataFile())) {
+        try (PrintWriter writer = new PrintWriter(getFile("dat"))) {
             for (User user : manager.getUsers()) {
                 
                 writer.println(user.getUsername());
-
-
                 
                 List<RentalPlace> rentalPlaces = user.getAllRentalPlaces();
                 writer.println(rentalPlaces.size());
@@ -30,12 +28,9 @@ public class DataHandler implements IDataHandler {
                     description = description.replaceAll("\n", "<br>");
                     writer.println(String.format("%s;%s;%s", place.getTitle(), description, place.getAvaliableDatesString()));
                 }
-            }
-
-
-            
+            } 
         }
-        try ( PrintWriter writer = new PrintWriter(getDataFileBookigs())){
+        try ( PrintWriter writer = new PrintWriter(getFile("datbookings"))){
             for (User user : manager.getUsers()) {
                 writer.println(user.getUsername());
                 System.out.println("Username: " + user.getUsername());
@@ -56,24 +51,21 @@ public class DataHandler implements IDataHandler {
         }
     }
 
-    private static String getDataFile() throws URISyntaxException {
-        URI uri = new URI(DataHandler.class.getResource("data/").toString() + "dat.txt");
-        return uri.getPath();
-    }
-    private static String getDataFileBookigs() throws URISyntaxException {
-        URI uri = new URI(DataHandler.class.getResource("data/").toString() + "datbookings.txt");
+    private static String getFile(String filename) throws URISyntaxException {
+        //Bruker URI istedet for File slik at mapper kan ha mellomrom
+        URI uri = new URI(DataHandler.class.getResource("data/").toString() + filename + ".txt");
         return uri.getPath();
     }
 
+    @Override
     public Manager readData() throws FileNotFoundException, URISyntaxException{
         Manager manager = new Manager(); 
-        try( Scanner scanner = new Scanner(new FileReader(getDataFile()))){
+        try( Scanner scanner = new Scanner(new FileReader(getFile("dat")))){
             while(scanner.hasNext()){
                 
                 ArrayList<String> brukerInfo = new ArrayList<>(Arrays.asList(scanner.nextLine().split("\n")));
                 String username = brukerInfo.get(0);
                 userFromFile(brukerInfo, manager);
-            
 
                 int antallBoliger = Integer.parseInt(scanner.nextLine());
                 
@@ -81,52 +73,38 @@ public class DataHandler implements IDataHandler {
 
                     ArrayList<String> boligInfo = new ArrayList<>(Arrays.asList(scanner.nextLine().split(";")));
                     boligFromFile(username, boligInfo, manager);
-                    
                 }
             }
         }
-        try ( Scanner scanner = new Scanner(new FileReader(getDataFileBookigs()))){
+        try ( Scanner scanner = new Scanner(new FileReader(getFile("datbookings")))){
 
             while ( scanner.hasNext() ){
                 String username = scanner.nextLine();
                 
-
                 int antallBookings = Integer.parseInt(scanner.nextLine());
 
-
-                for ( int i = 0; i< antallBookings ; i ++){
+                for (int i = 0; i < antallBookings ; i ++){
                     ArrayList<String> bookingInfo = new ArrayList<>(Arrays.asList(scanner.nextLine().split(";")));
                     bookingInfo.remove("");
                     bookingFromFile(username, bookingInfo, manager);
-
                 }
-
             }
-            scanner.close();
+            //scanner.close();
         }
-        
         return manager;
     }
 
     private void userFromFile(ArrayList<String> brukerInfo, Manager manager){
         // legger til passord her og, blir nextline igjen, altså format: username \n passord 
         manager.login(brukerInfo.get(0));
-        
-
-
     }
 
     private void boligFromFile(String username, ArrayList<String> boligInfo, Manager manager){
-        
         User owner = manager.getUser(username);
         String name = boligInfo.get(0);
         String description = boligInfo.get(1); 
         CharSequence[] dates = boligInfo.get(2).split(",");
         manager.newRentalPlaceOffline(owner, name, description, dates);
-        
-        
-
-
     }
     
     private void bookingFromFile(String username, ArrayList<String> bookingInfo, Manager manager){

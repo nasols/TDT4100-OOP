@@ -1,6 +1,5 @@
 package fire;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +16,7 @@ public class User {
     
     // mindre konstruktør
     public User(String username){
-        if (username == "") {
+        if (username.replaceAll(" ", "").equals("")) {
             throw new IllegalArgumentException("Vennligst skriv inn et brukernavn");
         }
         this.username = username; 
@@ -41,12 +40,10 @@ public class User {
         
     }
 
-    
     public void addBooking(RentalPlace bookedPlace, CharSequence bookingStart, CharSequence bookingEnd) {
         
         bookings.add(new Booking(bookedPlace, bookingStart, bookingEnd));
     }
-
 
     public List<String> getBookingList() {
         List<String> bookingList = new ArrayList<>();
@@ -64,12 +61,8 @@ public class User {
         return bookingList;
     }
     
-    
     public List<Booking> getBookings(){
         return this.bookings;
     }
-   
-    public static void main(String[] args) throws ParseException {
 
-    }
 }

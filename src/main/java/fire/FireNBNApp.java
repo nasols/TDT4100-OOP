@@ -16,7 +16,7 @@ public class FireNBNApp extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("FireNBN2.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("FireNBN.fxml"));
         Parent root = loader.load();
         FireNBNController controller = loader.getController();
         Scene scene = new Scene(root);
@@ -25,5 +25,4 @@ public class FireNBNApp extends Application {
         stage.show();
         stage.setOnCloseRequest(e -> controller.exit());
     }
-
 }
