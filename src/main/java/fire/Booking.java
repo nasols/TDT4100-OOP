@@ -21,4 +21,8 @@ public class Booking {
     public String toFileString() {
         return bookedPlace.getTitle() + ";" + this.bookingStart + ";" + this.bookingEnd;
     }
+
+    public RentalPlace getBookedPlace() {
+        return bookedPlace;
+    }
 }

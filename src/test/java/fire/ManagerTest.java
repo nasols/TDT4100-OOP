@@ -39,15 +39,26 @@ public class ManagerTest {
     public void testGetUser(){
         Assertions.assertEquals("user3", manager.getCurrentUsername());
         
+        User user3 = manager.getCurrentUser();
+        Assertions.assertEquals(user3, manager.getUser("user3"));
+
         Assertions.assertThrows(NoSuchElementException.class, () -> {
 			manager.getUser("user99");
 		});
     }
 
     @Test 
+    @DisplayName("Prøver å hente ut et sted som ikke finnes")
+    public void testGetRentalPlace(){
+        Assertions.assertThrows(NoSuchElementException.class, () -> {
+			manager.getRentalPlaceByName("place99");
+		});
+    }
+
+
+    @Test 
     @DisplayName("Sjekker login")
     public void testLogin(){
-
         Assertions.assertEquals(3, manager.getUsers().size());
 
         manager.login("user1");
@@ -57,141 +68,101 @@ public class ManagerTest {
         Assertions.assertEquals(4, manager.getUsers().size());
     }
 
+
     @Test 
     @DisplayName("Du kan ikke leie ut to steder med samme navn")
-    public void testGetUserf(){
-        Assertions.assertEquals("user3", manager.getCurrentUsername());
-        
-        Assertions.assertThrows(NoSuchElementException.class, () -> {
-			manager.getUser("user99");
+    public void testRentDouble(){
+        manager.login("user1");
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			manager.newRentalPlace("place1", "description1", "2022-06-02", "2023-06-20");
 		});
     }
 
     @Test
     @DisplayName("Sjekker newRentalPlace")
     public void testNewRentalPlace(){
+        manager.newRentalPlace("place4", "description4", "2022-06-02", "2023-06-20");
+        Assertions.assertEquals(4, manager.getAllRentalplaces().size());
+    }
 
+    @Test
+    @DisplayName("Du kan ikke leie fra et sted som ikke eksisterer")
+    public void testRentNonExisting(){
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> manager.newRentalPlace("hinna", "description", "2020-01-01", "2020-01-20"));
-
-        manager.newRentalPlace("oslo", "description", "2023-02-01", "2023-02-20");
-
-        int expected = 2;
-        Assertions.assertEquals(expected, manager.getCurrentUser().getAllRentalPlaces().size());
-
-        User expUser = manager.getUser("user1");
-        Assertions.assertEquals(expUser, manager.getRentalPlaceByName("hinna").getOwner());
-
-
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			manager.rentPlace("2022-07-01", "2022-07-03", -1);
+		});
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> {
+			manager.rentPlace("2022-07-01", "2022-07-03", 100);
+		});
 
     }
 
     @Test
-    @DisplayName("sjekker rentPlace")
-    public void testRentPlace(){
+    @DisplayName("Feil ved oppdatering av tidsintervaller ved leie")
+    public void testIntervalUpdate() {
+        Assertions.assertEquals(2, manager.getRentalPlace(0).getAvaliableDates().size());
+        
+        manager.rentPlace("2023-01-01", "2023-01-05", 0);
+        Assertions.assertEquals(4, manager.getRentalPlace(0).getAvaliableDates().size());
 
-        manager.login("user1");
-        manager.newRentalPlace("name", "description", "2023-01-01", "2023-01-20");
+        LocalDate d1 = LocalDate.parse("2022-06-01");
+        LocalDate d2 = LocalDate.parse("2023-01-01");
+        LocalDate d3 = LocalDate.parse("2023-01-05");
+        LocalDate d4 = LocalDate.parse("2023-06-30");
 
-        manager.login("user2");
-        manager.newRentalPlace("place2", "description", "2023-01-01", "2023-01-20");
-        manager.rentPlace("2023-01-10", "2023-01-15", 0);
-
-        manager.login("user3");
-        Assertions.assertThrows(IllegalArgumentException.class, () -> manager.rentPlace("2023-01-05", "2023-01-10", 0));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> manager.rentPlace("2022-01-05", "2023-01-10", 0));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> manager.rentPlace("2023-01-05", "2024-01-10", 0));
-        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> manager.rentPlace("2023-01-05", "2023-01-10", 15));
-
-        int expected1 = 4;
-        Assertions.assertEquals(expected1, manager.getRentalPlace(0).getAvaliableDates().size());
-
-        manager.rentPlace("2023-01-01", "2023-01-05", 1);
-        int expected2 = 2;
-        Assertions.assertEquals(expected2, manager.getRentalPlace(1).getAvaliableDates().size());
-
-        LocalDate d1 = LocalDate.parse("2023-01-05");
-        LocalDate d2 = LocalDate.parse("2023-01-20");
-        List<LocalDate> expected3 = new ArrayList<>(Arrays.asList(d1, d2));
-        Assertions.assertEquals(expected3, manager.getRentalPlace(1).getAvaliableDates());
-
-
-
+        List<LocalDate> expected3 = new ArrayList<>(Arrays.asList(d1, d2, d3, d4));
+        Assertions.assertEquals(expected3, manager.getRentalPlace(0).getAvaliableDates());
     }
 
     @Test 
-    @DisplayName("sjekker displaylist index overens med liste")
+    @DisplayName("Brukeren skal ikke kunne se sin egen leilighet")
     public void testDisplayList(){
-
         manager.login("user1");
-        manager.newRentalPlace("place11", "description", "2023-01-01", "2023-01-20");
-        manager.newRentalPlace("place12", "description", "2023-01-01", "2023-01-20");
-        manager.newRentalPlace("place13", "description", "2023-01-01", "2023-01-20");
-        manager.newRentalPlace("place14", "description", "2023-01-01", "2023-01-20");
-        manager.newRentalPlace("place15", "description", "2023-01-01", "2023-01-20");
-
-        manager.login("user2");
-        manager.newRentalPlace("place21", "description", "2023-01-01", "2023-01-20");
-        manager.newRentalPlace("place22", "description", "2023-01-01", "2023-01-20");
-        manager.newRentalPlace("place23", "description", "2023-01-01", "2023-01-20");
-        manager.newRentalPlace("place24", "description", "2023-01-01", "2023-01-20");
-
-        manager.rentPlace("2023-01-10", "2023-01-15", 0);
 
         List<String> displayList = manager.getRentalStringList();
         List<RentalPlace> allPlaces = manager.getAllRentalplaces();
 
-        int expected1 = 5;
+        int expected1 = 1;
         int actual1 = displayList.size();
         Assertions.assertEquals(expected1, actual1);
 
-        int expected2 = 9;
+        int expected2 = 3;
         int actual2 = allPlaces.size();
         Assertions.assertEquals(expected2, actual2);
+    }
 
-        Assertions.assertEquals(manager.getUser("user1").getRentalPlace(0), manager.getRentalList().get(0));
+    @Test
+    @DisplayName("Sjekker om relasjonen mellom brukere og leiligheter holdes etter utleie")
+    public void testBookingRelation(){
+        manager.rentPlace("2023-01-01", "2023-01-05", 0);
 
-
+        RentalPlace expected = manager.getUser("user1").getRentalPlace(0);
+        Assertions.assertEquals(expected, manager.getCurrentUser().getBookings().get(0).getBookedPlace()); 
 
     }
 
     @Test
-    @DisplayName("tester booking")
-    public void testBooking(){
-
-        Manager manager = new Manager();
-        manager.login("user1");
-        manager.newRentalPlace("place11", "description", "2023-01-01", "2023-01-20");
-        manager.newRentalPlace("place12", "description", "2023-01-01", "2023-01-20");
-        manager.newRentalPlace("place13", "description", "2023-01-01", "2023-01-20");
-        manager.newRentalPlace("place14", "description", "2023-01-01", "2023-01-20");
-        manager.newRentalPlace("place15", "description", "2023-01-01", "2023-01-20");
-
-        manager.login("user2");
-        manager.newRentalPlace("place21", "description", "2023-01-01", "2023-01-20");
-        manager.newRentalPlace("place22", "description", "2023-01-01", "2023-01-20");
-        manager.newRentalPlace("place23", "description", "2023-01-01", "2023-01-20");
-        manager.newRentalPlace("place24", "description", "2023-01-01", "2023-01-20");
-
-        manager.rentPlace("2023-01-10", "2023-01-15", 0);
-        manager.rentPlace("2023-01-10", "2023-01-15", 1);
-        manager.rentPlace("2023-01-10", "2023-01-15", 2);
-
-        manager.login("user1");
-        manager.rentPlace("2023-01-10", "2023-01-15", 0);
-        manager.rentPlace("2023-01-10", "2023-01-15", 1);
-        manager.rentPlace("2023-01-10", "2023-01-15", 2);
-
-        int expected1 = 3;
-        int actual1 = manager.getBookingStringList().size();
-        Assertions.assertEquals(expected1, actual1);
-
-        int expected2 = 6;
-        int actual2 = manager.getUser("user1").getBookingList().size() + manager.getUser("user2").getBookingList().size();
-        Assertions.assertEquals(expected2, actual2);
-
-
+    @DisplayName("Kan ikke leie før dagsdato")
+    public void testBookPast() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			manager.rentPlace("2020-07-01", "2022-07-03", 0);
+		});
     }
 
-    
+    @Test
+    @DisplayName("Sluttdato må være før startdato")
+    public void testBookStartBeforeEnd() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			manager.rentPlace("2022-07-03", "2022-07-01", 0);
+		});
+    }
+
+    @Test
+    @DisplayName("Sjekker om man kan booke utenfor ledig periode")
+    public void testBookUnavaliable() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			manager.rentPlace("2023-02-01", "2024-09-03", 1);
+		});
+    }
 }
