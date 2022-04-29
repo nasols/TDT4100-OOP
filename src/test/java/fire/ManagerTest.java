@@ -5,39 +5,73 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class ManagerTest {
-
+    Manager manager;
+    
+    @BeforeEach 
+    public void setup() {
+        manager = new Manager();
+        manager.login("user1");
+        manager.newRentalPlace("place1", "description1", "2022-06-01", "2023-06-30");
+        manager.newRentalPlace("place2", "description2", "2022-06-01", "2023-06-30");
+        manager.login("user2");
+        manager.newRentalPlace("place3", "description3", "2022-06-01", "2023-06-30");
+        manager.login("user3");
+    }
 
     @Test 
-    @DisplayName("sjekker login")
+    @DisplayName("Kan ikke logge inn med tomt brukernavn")
+    public void testLoginException(){
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			manager.login(" ");
+		});
+    }
+
+    @Test 
+    @DisplayName("Skjekker getCurrentUser og getUser")
+    public void testGetUser(){
+        Assertions.assertEquals("user3", manager.getCurrentUsername());
+        
+        Assertions.assertThrows(NoSuchElementException.class, () -> {
+			manager.getUser("user99");
+		});
+    }
+
+    @Test 
+    @DisplayName("Sjekker login")
     public void testLogin(){
-        Manager manager = new Manager();
-        
-        Assertions.assertThrows(IllegalArgumentException.class, ()->manager.getCurrentUser());
-        Assertions.assertThrows(IllegalArgumentException.class, () -> manager.login(""));
+
+        Assertions.assertEquals(3, manager.getUsers().size());
 
         manager.login("user1");
+        Assertions.assertEquals(3, manager.getUsers().size());
+
+        manager.login("user4");
+        Assertions.assertEquals(4, manager.getUsers().size());
+    }
+
+    @Test 
+    @DisplayName("Du kan ikke leie ut to steder med samme navn")
+    public void testGetUserf(){
+        Assertions.assertEquals("user3", manager.getCurrentUsername());
         
-        String expected = "user1";
-        manager.login("user2");
-        manager.login("user1");
-        Assertions.assertEquals(expected, manager.getCurrentUsername());
-
-
+        Assertions.assertThrows(NoSuchElementException.class, () -> {
+			manager.getUser("user99");
+		});
     }
 
     @Test
     @DisplayName("Sjekker newRentalPlace")
     public void testNewRentalPlace(){
-        Manager manager = new Manager();
-        manager.login("user1");
 
-        manager.newRentalPlace("hinna", "description", "2023-01-01", "2023-01-20");
+
         Assertions.assertThrows(IllegalArgumentException.class, () -> manager.newRentalPlace("hinna", "description", "2020-01-01", "2020-01-20"));
 
         manager.newRentalPlace("oslo", "description", "2023-02-01", "2023-02-20");
@@ -56,7 +90,6 @@ public class ManagerTest {
     @DisplayName("sjekker rentPlace")
     public void testRentPlace(){
 
-        Manager manager = new Manager();
         manager.login("user1");
         manager.newRentalPlace("name", "description", "2023-01-01", "2023-01-20");
 
@@ -89,7 +122,7 @@ public class ManagerTest {
     @Test 
     @DisplayName("sjekker displaylist index overens med liste")
     public void testDisplayList(){
-        Manager manager = new Manager();
+
         manager.login("user1");
         manager.newRentalPlace("place11", "description", "2023-01-01", "2023-01-20");
         manager.newRentalPlace("place12", "description", "2023-01-01", "2023-01-20");
