@@ -1,11 +1,13 @@
 package fire;
 
+import java.time.LocalDate;
+
 public class Booking {
     private RentalPlace bookedPlace;
-    private CharSequence bookingStart;
-    private CharSequence bookingEnd;
+    private LocalDate bookingStart;
+    private LocalDate bookingEnd;
 
-    public Booking(RentalPlace bookedPlace, CharSequence bookingStart, CharSequence bookingEnd) {
+    public Booking(RentalPlace bookedPlace, LocalDate bookingStart, LocalDate bookingEnd) {
         this.bookedPlace = bookedPlace;
         this.bookingStart = bookingStart;
         this.bookingEnd = bookingEnd;
@@ -16,8 +18,7 @@ public class Booking {
     }
 
     //Streng som beskriver en booking og skal lagres i fil
-    public String toFileString(){
-        return bookedPlace.toString(false) + ";" + this.bookingStart + "," + this.bookingEnd;
-
+    public String toFileString() {
+        return bookedPlace.getTitle() + ";" + this.bookingStart + ";" + this.bookingEnd;
     }
 }

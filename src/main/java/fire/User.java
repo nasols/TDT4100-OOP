@@ -1,5 +1,6 @@
 package fire;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class User {
         
     }
 
-    public void addBooking(RentalPlace bookedPlace, CharSequence bookingStart, CharSequence bookingEnd) {
+    public void addBooking(RentalPlace bookedPlace, LocalDate bookingStart, LocalDate bookingEnd) {
         
         bookings.add(new Booking(bookedPlace, bookingStart, bookingEnd));
     }
@@ -53,7 +54,7 @@ public class User {
         return bookingList;
     }
 
-    public List<String> getBookingListFileWrite() {
+    public List<String> getBookingInfo() {
         List<String> bookingList = new ArrayList<>();
         for (Booking booking : bookings) {
             bookingList.add(booking.toFileString());

@@ -1,10 +1,9 @@
 package fire;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.Scanner;
 public class DataHandler implements IDataHandler {
 
     @Override
-    public void writeData(Manager manager) throws FileNotFoundException, URISyntaxException {
+    public void writeData(Manager manager) throws FileNotFoundException {
         try (PrintWriter writer = new PrintWriter(getFile("dat"))) {
             for (User user : manager.getUsers()) {
                 
@@ -33,36 +32,29 @@ public class DataHandler implements IDataHandler {
         try ( PrintWriter writer = new PrintWriter(getFile("datbookings"))){
             for (User user : manager.getUsers()) {
                 writer.println(user.getUsername());
-                System.out.println("Username: " + user.getUsername());
 
-                List<String> bookingStrings = user.getBookingListFileWrite();
-
-                System.out.println("Bookings:");
-                bookingStrings.forEach(l -> System.out.println(l));
+                List<String> bookingStrings = user.getBookingInfo();
 
                 writer.println(bookingStrings.size());
 
                 for (String s : bookingStrings){
                     s = s.replaceAll("\n", ";");
                     writer.println(s);
-
                 }
             }
         }
     }
 
-    private static String getFile(String filename) throws URISyntaxException {
-        //Bruker URI istedet for File slik at mapper kan ha mellomrom
-        URI uri = new URI(DataHandler.class.getResource("data/").toString() + filename + ".txt");
-        return uri.getPath();
+    private static File getFile(String filename) {
+        return new File(DataHandler.class.getResource("data/").getFile() + filename + ".txt");
     }
 
     @Override
-    public Manager readData() throws FileNotFoundException, URISyntaxException{
+    public Manager readData() throws FileNotFoundException {
         Manager manager = new Manager(); 
+
         try( Scanner scanner = new Scanner(new FileReader(getFile("dat")))){
             while(scanner.hasNext()){
-                
                 ArrayList<String> brukerInfo = new ArrayList<>(Arrays.asList(scanner.nextLine().split("\n")));
                 String username = brukerInfo.get(0);
                 userFromFile(brukerInfo, manager);
@@ -77,7 +69,6 @@ public class DataHandler implements IDataHandler {
             }
         }
         try ( Scanner scanner = new Scanner(new FileReader(getFile("datbookings")))){
-
             while ( scanner.hasNext() ){
                 String username = scanner.nextLine();
                 
@@ -85,11 +76,9 @@ public class DataHandler implements IDataHandler {
 
                 for (int i = 0; i < antallBookings ; i ++){
                     ArrayList<String> bookingInfo = new ArrayList<>(Arrays.asList(scanner.nextLine().split(";")));
-                    bookingInfo.remove("");
                     bookingFromFile(username, bookingInfo, manager);
                 }
             }
-            //scanner.close();
         }
         return manager;
     }
@@ -110,13 +99,10 @@ public class DataHandler implements IDataHandler {
     private void bookingFromFile(String username, ArrayList<String> bookingInfo, Manager manager){
    
         RentalPlace rentalPlace = manager.getRentalPlaceByName(bookingInfo.get(0));
-        CharSequence bookingStart = bookingInfo.get(3);
-        CharSequence bookingEnd = bookingInfo.get(4);
-        manager.getUsers().stream().forEach(u -> System.out.println(u.getUsername()));
-        // kan ikke bruke getCurrentUser()
+
+        CharSequence bookingStart = bookingInfo.get(1);
+        CharSequence bookingEnd = bookingInfo.get(2);
+
         manager.addBookingOffline(username, rentalPlace, bookingStart, bookingEnd);
     }
-    
-    
-
 }
