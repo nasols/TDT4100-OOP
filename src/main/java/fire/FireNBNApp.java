@@ -23,6 +23,8 @@ public class FireNBNApp extends Application {
         stage.setTitle("FireNBN");
         stage.setScene(scene);
         stage.show();
+
+        // Sørger for at data blir lagret når brukeren lukker programmet
         stage.setOnCloseRequest(e -> controller.exit());
     }
 }

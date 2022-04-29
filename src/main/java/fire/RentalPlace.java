@@ -1,37 +1,27 @@
 package fire;
 
-import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
-
 public class RentalPlace {
-    // brukeren som leier ut stedet 
+
     private User owner;
 
-    // tittel på stedet/ annonsen 
     private String name;
 
-    // tenker availableDates alltid legger til par av datoer, startdato ledig --> sluttdato ledig, så når noen vil booke sjekkes bare om datoen de vil bo er innenfor intervall startdato ledig --> sluttdato ledig
-    // availableDates vil då alltid ha 2*n element
-    // liste over tilgjengelige datoer for leie
+    // Liste som representerer tidsintervaller hvor leiligheten er tilgjengelig på formen "startDato, sluttdato, ..., startDato, sluttDato"
     private List<LocalDate> availableDates = new ArrayList<>();
 
-    // beskrivelse av stedet 
     private String description; 
 
     // konstruktør 
     public RentalPlace(User owner, String name, String description, CharSequence availableStart, CharSequence availableEnd){
 
-        String pattern = "([a-zA-Z])\\1*";
         if (name.replaceAll(" ", "").equals("")) {
             throw new IllegalArgumentException("Vennligst gi stedet et navn");
-        }
-        if (name.matches(pattern)){
-            throw new IllegalArgumentException("Stedsnavnet kan ikke bestå av bare repeterende karakterer");
         }
 
         LocalDate availableStartDate = LocalDate.parse(availableStart);
@@ -48,11 +38,25 @@ public class RentalPlace {
         if (validateDateInterval(availableStartDate, availableEndDate)){
             this.availableDates.add(availableStartDate);
             this.availableDates.add(availableEndDate);
+        }
+    }
 
+    // konstruktør2, "offline" konstruktør 
+    // vet at datoer her vil ver gyldige, altså trenger ikke validering, denne brukes bare ved filLesning av allerede-validerte boliger. 
+    public RentalPlace(User owner, String name, String description, CharSequence[] fromToDatesInput){
+        ArrayList<LocalDate> fromToDates = new ArrayList<>();
+        ArrayList<CharSequence> chars = new ArrayList<>(Arrays.asList(fromToDatesInput));
+        chars.stream().forEach(e -> fromToDates.add(LocalDate.parse(e)));
+        if (this.owner == owner){
+            return;
         }
-        else {
-            throw new IllegalArgumentException("feil format på dato -> rentalplace -> RentalPlace");
-        }
+    
+        //skaper assosiasjonen mellom eier og plassen
+        this.owner = owner;
+        this.name = name;
+        this.description = description;
+        this.availableDates = fromToDates;
+
     }
 
     public String getTitle() {
@@ -76,17 +80,14 @@ public class RentalPlace {
     
     public User getOwner(){
         return this.owner;
-
     }
 
     public boolean validateRentalDate(LocalDate startDate, LocalDate endDate){
-
         /*
          sjekker om input datoer er innenfor et intervall i listen over availableDates for utleiestedet. 
          hvis de er return true 
          hvis ikke return false
          */
-
         if (validateDateInterval(startDate, endDate)){
             for (int i = 0; i < availableDates.size(); i += 1){
                 // i partall -> fra-dato
@@ -95,7 +96,6 @@ public class RentalPlace {
                     if(endDate.isBefore(availableDates.get(i))){
                         return true;
                     }
-
                     throw new IllegalArgumentException("Leiligheten er ikke tilgjengelig i denne tidsperioden");
                 }
                 else if (startDate.isBefore(availableDates.get(i)) && i%2 == 0){
@@ -107,37 +107,17 @@ public class RentalPlace {
     }
 
     private boolean validateDateInterval(LocalDate startDate, LocalDate endDate){
-        //sjekker om dato1 er etter dags dato, og om dato 2 er etter dato 1 
+        //sjekker om startdato er etter dags dato, og om sluttdato er etter startdato
     
         LocalDate today = LocalDate.now();
 
         if (startDate.isBefore(today)) {
             throw new IllegalArgumentException("Dato(ene) valgt er før dagsdato");
         } 
-        if (endDate.isBefore(startDate)){
+        if (endDate.isBefore(startDate) || endDate.isEqual(startDate)){
             throw new IllegalArgumentException("Sluttdatoen må være etter startdatoen");
         }
         return true;
-    }
-
-
-
-    // konstruktør2, "offline" konstruktør 
-    // vet at datoer her vil ver gyldige, altså trenger ikke validering, denne brukes bare ved filLesning av allerede-validerte boliger. 
-    public RentalPlace(User owner, String name, String description, CharSequence[] fromToDatesInput){
-        ArrayList<LocalDate> fromToDates = new ArrayList<>();
-        ArrayList<CharSequence> chars = new ArrayList<>(Arrays.asList(fromToDatesInput));
-        chars.stream().forEach(e -> fromToDates.add(LocalDate.parse(e)));
-        if (this.owner == owner){
-            return;
-        }
-    
-        //skaper assosiasjonen mellom eier og plassen
-        this.owner = owner;
-        this.name = name;
-        this.description = description;
-        this.availableDates = fromToDates;
-
     }
 
     public boolean inList(List<RentalPlace> compareList){
@@ -145,18 +125,29 @@ public class RentalPlace {
     }
 
     public String toString(boolean includeDates) {
-        //return owner + name + description;
+        // Beskrivelse av stedet som skal vises til bruker i brukergrensesnittet
+
         String avaliableDescription = "";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
         if (includeDates) {
-            for (LocalDate dat : availableDates){
-            avaliableDescription = avaliableDescription + dat + ", ";
+            if (availableDates.size() < 2) {
+                avaliableDescription = "Denne leiligheten er ikke tilgjengelig for øyeblikket";
+            }
+            else {
+                int idx = 1;
+                while (idx < availableDates.size()) {
+                    String fromDate = availableDates.get(idx-1).format(formatter);
+                    String toDate = availableDates.get(idx).format(formatter);
+                    avaliableDescription += "Ledig fra: " + fromDate + " til " + toDate + "\n";
+                    idx += 2;
+                }
             }
         }
         
         return String.format(
                 """
-                    --------------------------
+                    ---------------------------------------
                     Navn: %s
                     Eier: %s
                     %s  
@@ -166,12 +157,4 @@ public class RentalPlace {
             description,
             avaliableDescription);
     }
-    
-    public static void main(String[] args) throws ParseException {
-
-        
-    }
-
-    
-    
 }

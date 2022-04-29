@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class Manager {
     
@@ -16,23 +17,24 @@ public class Manager {
     public List<User> getUsers() {
         return users;
     }
+
     public String getCurrentUsername() {
         return currentUsername;
     }
+
     public User getCurrentUser(){
         return getUser(currentUsername);
     }
-    public User getUser(String username){
 
+    public User getUser(String username){
         for (User e : users){
             if (e.getUsername() == username){
                 return e;
             }
-
         }
-        throw new IllegalArgumentException("ingen bruker ved det brukernavnet");
-        
+        throw new NoSuchElementException("Brukeren " + username + " finnes ikke");
     }
+
     public RentalPlace getRentalPlace(int index){
         List<RentalPlace> displayList = rentalPlaces.stream().filter(e -> !e.inList(currentUser.getAllRentalPlaces())).toList();
         
@@ -44,90 +46,71 @@ public class Manager {
             if ( place.getTitle().equals(nameOfPlace)){
                 return place;
             }
-            
         }
-        throw new IllegalArgumentException("ingen steder med dette navnet");
-
-
+        throw new NoSuchElementException("Stedet " + nameOfPlace + " finnes ikke");
     }
 
     public void login(String username){
         User newUser = new User(username);        
 
-        if(!users.stream().anyMatch(e -> e.getUsername().equals(username))){
+        if (!users.stream().anyMatch(e -> e.getUsername().equals(username))){
 
             users.add(newUser);
             currentUser = newUser;
             currentUsername = username;
         }
 
-        else{
+        else {
             for ( User e : users ){
                 if ( e.getUsername().equals(username)){
                     this.currentUser = users.get(users.indexOf(e));
                     this.currentUsername = username;
-
                 }
             }
-
         }
-
     }
 
 
     public void newRentalPlace(String name, String description, CharSequence availableStart, CharSequence availableEnd, String ... args){
-        
-        //Både manager og user har en newRentalPlace metode?
-        // fikset 
-        if ( this.currentUser.getAllRentalPlaces().stream().anyMatch(r -> r.getTitle().equals(name)) ){
 
-            throw new IllegalArgumentException("allerede eksisterende bolig, Manager -> newRentalPlace");
-            
+        if ( this.currentUser.getAllRentalPlaces().stream().anyMatch(r -> r.getTitle().equals(name)) ){
+            throw new IllegalArgumentException("Du kan ikke leie ut to steder med samme navn");
         }
+
         RentalPlace newPlace = new RentalPlace(this.currentUser, name, description, availableStart, availableEnd);
         rentalPlaces.add(newPlace);
         currentUser.addRentalPlace(newPlace);
-
-
-        
     }
 
-    // brukes bare ved fillesning, trenger ikke validering pga allerede-validert bolig
+    // Brukes bare ved fillesning, trenger ikke validering pga allerede validert bolig
     public void newRentalPlaceOffline(User owner, String name, String description, CharSequence[] fromToDatesInput){
         
         RentalPlace place = new RentalPlace(owner, name, description, fromToDatesInput);
         rentalPlaces.add(place);
         owner.addRentalPlace(place);
-
-        
     }
 
+    
     public void addBookingOffline(String username, RentalPlace bookedPlace, CharSequence bookingStart, CharSequence bookingEnd){
         this.login(username);
         User user = this.currentUser;
-        user.addBooking(bookedPlace, bookingStart, bookingEnd);
- 
+        user.addBooking(bookedPlace, LocalDate.parse(bookingStart), LocalDate.parse(bookingEnd));
     }
 
-    // leier plass, fra dato til dato, samt navnet på stedet du vil leie
     public void rentPlace(CharSequence date1, CharSequence date2, int indexOfPlace){
 
         if (indexOfPlace == -1) {
             throw new IllegalArgumentException("Velg et sted å leie");
         }
-        /*
-         tar inn 2 datoer, fra og til dato, og hvilken bolig du vil leie 
-         sjekker om datoene er innenfor et intervall tilhørende bolig 
-         oppdaterer så listen over ledige datoer til boligen
-        */
 
         LocalDate rentalDateStart = LocalDate.parse(date1);
         LocalDate rentalDateEnd = LocalDate.parse(date2);
 
         RentalPlace wishedRented = getRentalList().get(indexOfPlace);
 
-        List<LocalDate> availableDates = wishedRented.getAvaliableDates(); //Ikkje lov 
+        List<LocalDate> availableDates = wishedRented.getAvaliableDates();
 
+        // Skjekker om leiligheten er tilgjengelig i ønsket leieperiode, og oppdaterer leilighetens tilgjengelighet
         if(wishedRented.validateRentalDate(rentalDateStart, rentalDateEnd)){
 
             if(availableDates.contains(rentalDateStart) && availableDates.contains(rentalDateEnd)){
@@ -150,13 +133,13 @@ public class Manager {
             
             Collections.sort(availableDates, new LocalDateComparator());
 
-            currentUser.addBooking(wishedRented, rentalDateStart.toString(), rentalDateEnd.toString());
+            currentUser.addBooking(wishedRented, rentalDateStart, rentalDateEnd);
         }
     }
 
 
     public List<String> getRentalStringList(){
-
+        // Returnerer en liste med beskrivende strenger av alle leiligheter
         List<RentalPlace> displayList = rentalPlaces.stream().filter(e -> !e.inList(currentUser.getAllRentalPlaces())).toList();
 
         List<String> display = new ArrayList<>();
@@ -170,17 +153,16 @@ public class Manager {
     }
 
     public List<RentalPlace> getRentalList(){
-
         List<RentalPlace> displayList = rentalPlaces.stream().filter(e -> !e.inList(currentUser.getAllRentalPlaces())).toList();
-
         return displayList; 
     }
+
 
     public List<String> getBookingStringList() {
         return currentUser.getBookingList();
     }
 
-    public List<RentalPlace> getAllRentalplaces (){
+    public List<RentalPlace> getAllRentalplaces() {
         return rentalPlaces;
     } 
 }

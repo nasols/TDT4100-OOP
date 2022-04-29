@@ -1,7 +1,7 @@
 package fire;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.NoSuchElementException;
 
 import javafx.fxml.FXML;
@@ -41,8 +41,15 @@ public class FireNBNController {
 
 
     @FXML
-    public void initialize() throws IOException, URISyntaxException {
-        this.manager = saveHandler.readData();
+    public void initialize() throws IOException {
+        try {
+            this.manager = saveHandler.readData();
+        }
+        catch (FileNotFoundException e) {
+            // Hvis det ikke finnes lagret data blir FileNotFound utløst
+            this.manager = new Manager();
+        }
+        bookingList.setFocusTraversable(false);
         initVisible();
     }
 
@@ -54,15 +61,12 @@ public class FireNBNController {
             updateBookingList();
             updateInfoLabel("Logget inn som " + manager.getCurrentUsername());
             toggleVisible();
-            username.clear(); 
-            logoutButton.setStyle("-fx-background-color: red;");
+            username.clear();
         }
         catch (IllegalArgumentException e) {
             showErrorMessage(e.getMessage());
         }
-        
     }
-
 
     @FXML
     private void handleLogout() {
@@ -70,7 +74,6 @@ public class FireNBNController {
         toggleVisible();
         clearPlaceForm();
     }
-
 
     @FXML
     private void handleAddPlace() {
@@ -103,8 +106,6 @@ public class FireNBNController {
         catch (NullPointerException e) {
             showErrorMessage("Dato for leie er ikke oppgitt");
         }
-        
-        
     }
 
     private void initVisible() {
@@ -129,13 +130,14 @@ public class FireNBNController {
     private void clearPlaceForm() {
         title.clear();
         description.clear();
-        avaliableDateEnd.getEditor().clear();
-        avaliableDateStart.getEditor().clear();
+        //avaliableDateEnd.getEditor().clear();
+        avaliableDateEnd.setValue(null);
+        avaliableDateStart.setValue(null);
     }
 
     private void clearRentForm() {
-        rentStart.getEditor().clear();
-        rentEnd.getEditor().clear();
+        rentEnd.setValue(null);
+        rentStart.setValue(null);
     }
 
     private void showErrorMessage(String errorMessage) {
@@ -157,20 +159,13 @@ public class FireNBNController {
 
     public void exit() {
         try {
-            System.out.println("Lagrer...");
             saveHandler.writeData(manager);
         }
         catch (IOException e) {
             System.out.println(e);
-            showErrorMessage("Feil ved lagring av data");
-        }
-        catch (URISyntaxException e) {
-            System.out.println(e);
-            showErrorMessage("Feil ved filplassering");
         }
         catch (NoSuchElementException e) {
             System.out.println(e);
-            //Trenge me denne?
         }
     }
 }
