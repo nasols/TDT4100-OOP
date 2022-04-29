@@ -130,7 +130,6 @@ public class FireNBNController {
     private void clearPlaceForm() {
         title.clear();
         description.clear();
-        //avaliableDateEnd.getEditor().clear();
         avaliableDateEnd.setValue(null);
         avaliableDateStart.setValue(null);
     }

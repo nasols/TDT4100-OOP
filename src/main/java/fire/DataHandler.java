@@ -91,8 +91,15 @@ public class DataHandler implements IDataHandler {
     private void boligFromFile(String username, ArrayList<String> boligInfo, Manager manager){
         User owner = manager.getUser(username);
         String name = boligInfo.get(0);
-        String description = boligInfo.get(1); 
-        CharSequence[] dates = boligInfo.get(2).split(",");
+        String description = boligInfo.get(1);
+
+        CharSequence[] dates = {};
+        try {
+            dates = boligInfo.get(2).split(",");
+        } 
+        catch (IndexOutOfBoundsException e) { 
+            // Utløses når en leilighet ikke har noen ledige datoer. Da skal "dates" bare være et tomt array og ingenting skal gjøres
+        }
         manager.newRentalPlaceOffline(owner, name, description, dates);
     }
     

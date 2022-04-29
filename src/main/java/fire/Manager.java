@@ -82,7 +82,7 @@ public class Manager {
         currentUser.addRentalPlace(newPlace);
     }
 
-    // Brukes bare ved fillesning, trenger ikke validering pga allerede validert bolig
+    // Brukes for å gjenskape tilstander og relasjoner fra fil
     public void newRentalPlaceOffline(User owner, String name, String description, CharSequence[] fromToDatesInput){
         
         RentalPlace place = new RentalPlace(owner, name, description, fromToDatesInput);
@@ -90,7 +90,7 @@ public class Manager {
         owner.addRentalPlace(place);
     }
 
-    
+    // Brukes for å gjenskape tilstander og relasjoner fra fil
     public void addBookingOffline(String username, RentalPlace bookedPlace, CharSequence bookingStart, CharSequence bookingEnd){
         this.login(username);
         User user = this.currentUser;
@@ -111,22 +111,22 @@ public class Manager {
         List<LocalDate> availableDates = wishedRented.getAvaliableDates();
 
         // Skjekker om leiligheten er tilgjengelig i ønsket leieperiode, og oppdaterer leilighetens tilgjengelighet
-        if(wishedRented.validateRentalDate(rentalDateStart, rentalDateEnd)){
+        if (wishedRented.validateRentalDate(rentalDateStart, rentalDateEnd)) {
 
-            if(availableDates.contains(rentalDateStart) && availableDates.contains(rentalDateEnd)){
+            if (availableDates.contains(rentalDateStart) && availableDates.contains(rentalDateEnd)) {
                 availableDates.remove(rentalDateStart);
                 availableDates.remove(rentalDateEnd);
             }
             
-            else if(availableDates.contains(rentalDateStart)){
+            else if (availableDates.contains(rentalDateStart)) {
                 availableDates.remove(rentalDateStart);
                 availableDates.add(rentalDateEnd);
             }
-            else if(availableDates.contains(rentalDateEnd)){
+            else if (availableDates.contains(rentalDateEnd)) {
                 availableDates.add(rentalDateStart);
                 availableDates.remove(rentalDateEnd);
             }
-            else{
+            else {
                 availableDates.add(rentalDateStart);
                 availableDates.add(rentalDateEnd);
             }

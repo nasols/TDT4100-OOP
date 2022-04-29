@@ -30,7 +30,7 @@ public class RentalPlace {
             return;
         }
     
-        //skaper assosiasjonen mellom eier og plassen
+        //skaper assosiasjoner mellom eier og plassen
         this.owner = owner;
         this.name = name;
         this.description = description;
@@ -88,18 +88,24 @@ public class RentalPlace {
          hvis de er return true 
          hvis ikke return false
          */
+        String e = "Leiligheten er ikke tilgjengelig i denne tidsperioden";
+        
+        if (availableDates.size() < 2) {
+            throw new IllegalArgumentException(e);
+        }
+
         if (validateDateInterval(startDate, endDate)){
             for (int i = 0; i < availableDates.size(); i += 1){
                 // i partall -> fra-dato
                 // i oddetall -> til-dato
                 if ((startDate.isBefore(availableDates.get(i))) && i%2 != 0){
-                    if(endDate.isBefore(availableDates.get(i))){
+                    if(endDate.isBefore(availableDates.get(i)) || endDate.isEqual(availableDates.get(i))){
                         return true;
                     }
-                    throw new IllegalArgumentException("Leiligheten er ikke tilgjengelig i denne tidsperioden");
+                    throw new IllegalArgumentException(e);
                 }
                 else if (startDate.isBefore(availableDates.get(i)) && i%2 == 0){
-                    throw new IllegalArgumentException("Leiligheten er ikke tilgjengelig i denne tidsperioden");
+                    throw new IllegalArgumentException(e);
                 }
             }
         }
